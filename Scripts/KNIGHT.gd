@@ -1,28 +1,48 @@
 extends CharacterBody2D
 
+#var velocity = Vector2(0,0)
+var dash_duration = 10
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+var RUNSPEED = 340
+var DASHSPEED = 390
+var WALKSPEED = 200
+var GRAVITY = 1800
+var JUMPFORCE = 500
+var MAX_JUMPFORCE = 800
+var DOUBLEJUMPFORCE = 1000
+var MAXAIRSPEED = 300
+var AIR_ACCEL = 25
+var FALLSPEED = 60
+var FALLINGSPEED = 900
+var MAXFALLSPEED = 900
+var TRACTION = 40
+var ROLL_DISTANCE = 350
+var air_dodge_speed = 500
+var UP_B_LAUNCHSPEED = 700
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+@onready var states = $State
 
+var frame = 0
+func updateframes(delta):
+	frame += 1
+
+func turn(direction):
+	var dir = 0
+	if direction:
+		dir = -1
+	else:
+		dir = 1
+	$Sprite.set_flip_h(direction)
+
+func fr():
+	frame = 0
+
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass 
 
 func _physics_process(delta):
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y += gravity * delta
+	$Frames.text = str(frame)
 
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction = Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
