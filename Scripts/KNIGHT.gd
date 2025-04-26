@@ -1,6 +1,5 @@
 extends CharacterBody2D
 
-#var velocity = Vector2(0,0)
 var dash_duration = 10
 
 var RUNSPEED = 340
@@ -44,5 +43,5 @@ func _ready():
 	pass 
 
 func _physics_process(delta):
-	$Frames.text = str(frame)
+	pass#$Frames.text = str(frame)
 
