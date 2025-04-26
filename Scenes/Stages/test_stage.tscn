@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://13txl7inet7o"]
+
+[ext_resource type="Texture2D" uid="uid://3w45al3l6f" path="res://Scenes/Stages/1.png" id="1_kn0xw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4qs5d"]
+size = Vector2(965.5, 40)
+
+[node name="test stage" type="Node2D"]
+
+[node name="stage_template" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(960, 540)
+scale = Vector2(2, 2)
+texture = ExtResource("1_kn0xw")
+
+[node name="stage_template2" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_kn0xw")
+
+[node name="floor" type="StaticBody2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor"]
+position = Vector2(959.75, 770)
+shape = SubResource("RectangleShape2D_4qs5d")
+
+[node name="wall" type="StaticBody2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="wall"]
+position = Vector2(960, 832)
+polygon = PackedVector2Array(-480, -41, -426, 13, -341, 53, 339, 53, 426, 13, 480, -41)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_left = -1150
+limit_top = -750
+limit_right = 1150
+limit_bottom = 550
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.0
+drag_right_margin = 0.0
+editor_draw_limits = true
+editor_draw_drag_margin = true
