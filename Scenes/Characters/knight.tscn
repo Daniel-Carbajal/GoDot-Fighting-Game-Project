@@ -869,7 +869,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p3nqb"]
-size = Vector2(26, 37)
+size = Vector2(31, 55)
 
 [node name="KNIGHT" type="CharacterBody2D"]
 script = ExtResource("1_k2c4n")
@@ -879,6 +879,7 @@ script = ExtResource("2_lu0at")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_dsdq5")
 animation = &"Idle"
 
@@ -888,7 +889,7 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 1.5)
+position = Vector2(0.5, 2.5)
 shape = SubResource("RectangleShape2D_p3nqb")
 
 [node name="Raycasts" type="Node" parent="."]
