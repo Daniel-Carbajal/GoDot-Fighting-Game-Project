@@ -130,13 +130,13 @@ func state_includes(state_array):
 	return false
 
 func AIRMOVEMENT():
-	if parent.velocity.y < parent.FALLSPEED: #If vert velocity is less than the FALLSPEED, increase vert velocity 
+	if parent.velocity.y < parent.FALLINGSPEED: #If vert velocity is less than the FALLSPEED, increase vert velocity 
 		parent.velocity.y += parent.FALLSPEED #In GoDot, positive y is inverted, so + to y, is down
 	if Input.is_action_pressed("down_%s" % id) and parent.velocity.y > -150 and not parent.fastfall: 
 		parent.velocity.y = parent.MAXFALLSPEED
 		parent.fastfall = true
 	if parent.fastfall == true: #if we are fast falling
-		parent.set_collision_mask_bit(2,false) #character will be able to fall through platforms
+		parent.set_collision_mask_value4(2,false) #character will be able to fall through platforms
 		parent.velocity.y = parent.MAXFALLSPEED
 		
 	#If the characters X velocity is greater/equal to the MAXAIRSPEED in either directions(using abs)

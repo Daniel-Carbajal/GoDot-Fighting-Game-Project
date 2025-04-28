@@ -47,5 +47,4 @@ editor_draw_limits = true
 editor_draw_drag_margin = true
 
 [node name="KNIGHT" parent="." instance=ExtResource("2_n3eht")]
-position = Vector2(355, 122)
-scale = Vector2(1.5, 1.5)
+position = Vector2(358, 164)
