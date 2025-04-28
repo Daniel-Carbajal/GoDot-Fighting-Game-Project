@@ -5,15 +5,16 @@ var frame = 0
 
 #Air Variables
 var dash_duration = 10
-var jump_squat = 3 #Before the character jumps it enters JUMP_SQUAT which is 3 frames
-var landing_frames = 0
-var lag_frames = 0
+var jump_squat = 5 #Before the character jumps it enters JUMP_SQUAT which is 3 frames
+var landing_frames = 5
+var lag_frames = 5
 var fastfall = false
 
 #OnReady Variables
 @onready var GroundR = get_node('Raycasts/GroundR')
 @onready var GroundL = get_node('Raycasts/GroundL')
 @onready var states = $State
+@onready var sprite = get_node("Sprite/AnimationPlayer")
 
 #Knights main attributes
 var RUNSPEED = 340
@@ -54,5 +55,5 @@ func _ready():
 	pass 
 
 func _physics_process(delta):
-	pass#$Frames.text = str(frame)
+	$Frames.text = str(frame)
 

@@ -11,6 +11,7 @@ func _ready():
 	add_state("MOONWALK")
 	add_state("WALK")
 	add_state("LANDING")
+	add_state("CROUCH")
 	call_deferred("set_state", states.STAND)
 	
 
@@ -53,11 +54,11 @@ func get_transition(delta):
 		states.JUMP_SQUAT:
 			if parent.frame == parent.jump_squat: #Once we reach the 3rd frame of JUMP_SQUAT state
 				if not Input.is_action_pressed("jump_%s" % id): #Check if the player isnt still holding the jump button
-					parent.velocity.x = lerp(parent.velocity.x,0,0.08)
+					parent.velocity.x = lerp(parent.velocity.x,0.0,0.08)
 					parent.fr()
 					return states.SHORT_HOP #If they arent holding it do a short hop
 				else:
-					parent.velocity.x = lerp(parent.velocity.x,0,0.08)
+					parent.velocity.x = lerp(parent.velocity.x,0.0,0.08)
 					parent.fr()
 					return states.FULL_HOP #otherwise if they are holding it, do a full jump
 					
@@ -76,18 +77,21 @@ func get_transition(delta):
 				if parent.velocity.x > 0:
 					parent.fr()
 				parent.velocity.x = -parent.DASHSPEED
+				parent.turn(true)
 			elif Input.is_action_pressed("right_%s" % id): #pressing right but facing left
 				if parent.velocity.x < 0:
 					parent.fr()
 				parent.velocity.x = parent.DASHSPEED
+				parent.turn(false)
 			else:
 				if parent.frame >= parent.dash_duration-1:
 					return states.STAND
 					
 		states.MOONWALK:
 			pass
-			
 		states.WALK:
+			pass
+		states.CROUCH:
 			pass
 			
 		states.AIR:
@@ -97,7 +101,7 @@ func get_transition(delta):
 			if parent.frame <= parent.landing_frames + parent.lag_frames: #Checking if we are still landing
 				if parent.frame == 1: #If we are still landing and its on the first frame of landing, nothing happens
 					pass
-				if parent.velocity > 0: #If knights is moving to the right
+				if parent.velocity.x > 0: #If knights is moving to the right
 					parent.velocity.x = parent.velocity.x - parent.TRACTION/2 #Than the knight will slow down
 					parent.velocity.x = clamp(parent.velocity.x, 0 ,parent.velocity.x) #The knight is only able to slow down to a speed of zero(otherwise it would be moving to the left)
 				elif parent.velocity.x < 0: #If knights moving to the left
@@ -112,13 +116,34 @@ func get_transition(delta):
 					parent.fr()
 					return states.CROUCH
 				else:
-					parent.frame()
+					parent.fr()
 					parent.lag_frames = 0
 					return states.STAND
 				parent.lag_frames = 0
+				return states.STAND
 
-func enter_state(new_state, old_state):
-	pass
+func enter_state(new_state, old_state): #Once you have entered a state, play the aproporiate animation
+	match new_state:
+		states.STAND:
+			parent.sprite.play("Idle")
+			parent.states.text = str("STAND")
+		states.DASH:
+			parent.sprite.play("Run")
+			parent.states.text = str("DASH")
+		states.JUMP_SQUAT:
+			parent.states.text = str("JUMP_SQUAT")
+		states.SHORT_HOP:
+			parent.sprite.play("Jump")
+			parent.states.text = str("SHORT_HOP")
+		states.FULL_HOP:
+			parent.sprite.play("Jump")
+			parent.states.text = str("FULL_HOP")
+		states.AIR:
+			parent.sprite.play("Jump")
+			parent.states.text = str("AIR")
+		states.LANDING:
+			#parent.play_animation("Jump")
+			parent.states.text = str("LANDING")
 
 func exit_state(old_state, new_state):
 	pass
@@ -136,7 +161,7 @@ func AIRMOVEMENT():
 		parent.velocity.y = parent.MAXFALLSPEED
 		parent.fastfall = true
 	if parent.fastfall == true: #if we are fast falling
-		parent.set_collision_mask_value4(2,false) #character will be able to fall through platforms
+		parent.set_collision_mask_value(2,false) #character will be able to fall through platforms
 		parent.velocity.y = parent.MAXFALLSPEED
 		
 	#If the characters X velocity is greater/equal to the MAXAIRSPEED in either directions(using abs)
@@ -170,15 +195,15 @@ func LANDING():
 	if state_includes([states.AIR]): #if the character is withing any of the provided states (within state_includes)
 		if(parent.GroundL.is_colliding()) and parent.velocity.y > 0: #if the characters left foot is touching the ground and its vert velocity is greater than 0
 			var collider = parent.GroundL.get_collider() #store what the foot is colliding with
-			parent.fr() #reset frame count
+			parent.frame = 0 #reset frame count
 			if parent.velocity.y > 0: 
 				parent.velocity.y = 0 #reset vert velocity
 			parent.fastfall = false #end the fastfall because we are now on the ground
 			return true
 			
-		elif (parent.GroundR.is_colliding()) and parent.velocity.y > 0: #if the characters right foot is touching the ground and its vert velocity is greater than zer0
+		elif parent.GroundR.is_colliding() and parent.velocity.y > 0: #if the characters right foot is touching the ground and its vert velocity is greater than zer0
 			var collider2 = parent.GroundR.get_collider() #store what the foot is colliding with
-			parent.fr() #reset frame count
+			parent.frame = 0 #reset frame count
 			if parent.velocity.y > 0: 
 				parent.velocity.y = 0 #reset vert velocity
 			parent.fastfall = false #end the fastfall because we are now on the ground
@@ -188,3 +213,5 @@ func FALLING():
 	if state_includes([states.STAND, states.DASH]): #if the character is withing any of the provided states (within state_includes)
 		if not parent.GroundL.is_colliding() and not parent.GroundR.is_colliding():	
 			return true #if neither of the characters feet are touching the ground, it is falling(return true)
+	else:
+		false

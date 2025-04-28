@@ -798,6 +798,7 @@ tracks/1/keys = {
 [sub_resource type="Animation" id="Animation_nkmp7"]
 resource_name = "Run"
 length = 0.533335
+loop_mode = 1
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -872,6 +873,7 @@ _data = {
 size = Vector2(31, 55)
 
 [node name="KNIGHT" type="CharacterBody2D"]
+scale = Vector2(2, 2)
 script = ExtResource("1_k2c4n")
 
 [node name="StateMachine" type="Node" parent="."]
@@ -892,18 +894,34 @@ libraries = {
 position = Vector2(0.5, 2.5)
 shape = SubResource("RectangleShape2D_p3nqb")
 
-[node name="Raycasts" type="Node" parent="."]
+[node name="Raycasts" type="Node2D" parent="."]
 
 [node name="GroundL" type="RayCast2D" parent="Raycasts"]
-position = Vector2(-11, 21)
+position = Vector2(-11, 22)
 target_position = Vector2(0, 10)
 collision_mask = 6
+hit_from_inside = true
 
 [node name="GroundR" type="RayCast2D" parent="Raycasts"]
-position = Vector2(10, 21)
+position = Vector2(10, 22)
 target_position = Vector2(0, 10)
 collision_mask = 6
+hit_from_inside = true
 
 [node name="Ledge_Grab_F" type="RayCast2D" parent="Raycasts"]
 
 [node name="Ledge_Grab_B" type="RayCast2D" parent="Raycasts"]
+
+[node name="Frames" type="Label" parent="."]
+offset_left = -4.5
+offset_top = -64.5
+offset_right = 35.5
+offset_bottom = -41.5
+text = "0"
+
+[node name="State" type="Label" parent="."]
+offset_left = -17.5
+offset_top = -49.5
+offset_right = 22.5
+offset_bottom = -26.5
+text = "Test"

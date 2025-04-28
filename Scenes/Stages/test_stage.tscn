@@ -8,21 +8,16 @@ size = Vector2(965.5, 40)
 
 [node name="test stage" type="Node2D"]
 
-[node name="stage_template" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(960, 540)
-scale = Vector2(2, 2)
-texture = ExtResource("1_kn0xw")
-
 [node name="stage_template2" type="Sprite2D" parent="."]
 scale = Vector2(2, 2)
 texture = ExtResource("1_kn0xw")
 
 [node name="floor" type="StaticBody2D" parent="."]
 position = Vector2(-960, -540)
-collision_layer = 2
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="floor"]
+visibility_layer = 7
 position = Vector2(959.75, 770)
 shape = SubResource("RectangleShape2D_4qs5d")
 
@@ -47,4 +42,4 @@ editor_draw_limits = true
 editor_draw_drag_margin = true
 
 [node name="KNIGHT" parent="." instance=ExtResource("2_n3eht")]
-position = Vector2(358, 164)
+position = Vector2(354, -31)

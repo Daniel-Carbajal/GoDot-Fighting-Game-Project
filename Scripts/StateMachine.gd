@@ -6,6 +6,7 @@ var previous_state = null
 var states = {}
  
 @onready var parent = get_parent()
+
  
 func _physics_process(delta): #Runs every frame
 	if state !=null: #if it has a state
