@@ -895,8 +895,14 @@ shape = SubResource("RectangleShape2D_p3nqb")
 [node name="Raycasts" type="Node" parent="."]
 
 [node name="GroundL" type="RayCast2D" parent="Raycasts"]
+position = Vector2(-11, 21)
+target_position = Vector2(0, 10)
+collision_mask = 6
 
 [node name="GroundR" type="RayCast2D" parent="Raycasts"]
+position = Vector2(10, 21)
+target_position = Vector2(0, 10)
+collision_mask = 6
 
 [node name="Ledge_Grab_F" type="RayCast2D" parent="Raycasts"]
 

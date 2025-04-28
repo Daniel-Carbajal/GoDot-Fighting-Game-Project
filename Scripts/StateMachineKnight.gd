@@ -20,15 +20,19 @@ func state_logic(delta):
 
 func get_transition(delta):
 	parent.move_and_slide()
-	if LANDING() == true:
-		parent.fr()
-		return states.LANDING
+	
+	if LANDING() == true: #if the character is landing
+		parent.fr() #reset the frames
+		return states.LANDING #return the landing state
 		
-	if FALLING() == true:
-		return states.AIR
+	if FALLING() == true: #if the character is falling
+		return states.AIR #return the air state
 		
 	match state: #like case or pattern matching
 		states.STAND:
+			if Input.get_action_strength("jump_%s" % id):
+				parent.fr()
+				return states.JUMP_SQUAT
 			if Input.get_action_strength("right_%s" % id) == 1: #if "right_%s" was the input of the player
 				parent.turn(false)
 				parent.velocity.x = parent.RUNSPEED 
@@ -90,7 +94,28 @@ func get_transition(delta):
 			AIRMOVEMENT()
 			
 		states.LANDING:
-			pass
+			if parent.frame <= parent.landing_frames + parent.lag_frames: #Checking if we are still landing
+				if parent.frame == 1: #If we are still landing and its on the first frame of landing, nothing happens
+					pass
+				if parent.velocity > 0: #If knights is moving to the right
+					parent.velocity.x = parent.velocity.x - parent.TRACTION/2 #Than the knight will slow down
+					parent.velocity.x = clamp(parent.velocity.x, 0 ,parent.velocity.x) #The knight is only able to slow down to a speed of zero(otherwise it would be moving to the left)
+				elif parent.velocity.x < 0: #If knights moving to the left
+					parent.velocity.x = parent.velocity.x + parent.TRACTION/2 #than the knight will slow down 
+					parent.velocity.x = clamp(parent.velocity.x, parent.velocity.x, 0) #The knight can only slow down to zero (otherwise velocity.x > 0 is moving to right)
+				if Input.is_action_just_pressed("jump_%s" % id): 
+					parent.fr()
+					return states.JUMP_SQUAT
+			else: 
+				if Input.is_action_pressed("down_%s" % id):
+					parent.lag_frames = 0
+					parent.fr()
+					return states.CROUCH
+				else:
+					parent.frame()
+					parent.lag_frames = 0
+					return states.STAND
+				parent.lag_frames = 0
 
 func enter_state(new_state, old_state):
 	pass
@@ -105,26 +130,61 @@ func state_includes(state_array):
 	return false
 
 func AIRMOVEMENT():
-	pass
+	if parent.velocity.y < parent.FALLSPEED: #If vert velocity is less than the FALLSPEED, increase vert velocity 
+		parent.velocity.y += parent.FALLSPEED #In GoDot, positive y is inverted, so + to y, is down
+	if Input.is_action_pressed("down_%s" % id) and parent.velocity.y > -150 and not parent.fastfall: 
+		parent.velocity.y = parent.MAXFALLSPEED
+		parent.fastfall = true
+	if parent.fastfall == true: #if we are fast falling
+		parent.set_collision_mask_bit(2,false) #character will be able to fall through platforms
+		parent.velocity.y = parent.MAXFALLSPEED
+		
+	#If the characters X velocity is greater/equal to the MAXAIRSPEED in either directions(using abs)
+	if abs(parent.velocity.x) >= abs(parent.MAXAIRSPEED):
+		if parent.velocity.x > 0: 							#moving right handler^ (only reached if greater than MAXAIRSPEED)
+			if Input.is_action_pressed("left_%s" % id): 	#press left
+				parent.velocity.x += -parent.AIR_ACCEL 		#begin drifting left
+			elif Input.is_action_pressed("right_%s" % id):  #press right
+				parent.velocity.x = parent.velocity.x		#continue moving right
+		if parent.velocity.x < 0: 							#moving left handler^(inverse to right) (only reached if greater than MAXAIRSPEED)
+			if Input.is_action_pressed("left_%s" % id):		#press left
+				parent.velocity.x = parent.velocity.x		#continue moving left
+			elif Input.is_action_pressed("right_%s" % id):	#press right
+				parent.velocity.x += parent.AIR_ACCEL		#begin drifitng right
+				
+	#If the characters velocity is less than the MAXAIRSPEED in either directions
+	elif abs(parent.velocity.x) < abs(parent.MAXAIRSPEED): 
+		if Input.is_action_pressed("left_%s" % id): 	#press left
+			parent.velocity.x += -parent.AIR_ACCEL		#speed up moving to left
+		elif Input.is_action_pressed("right_%s" % id): 	#press right
+			parent.velocity.x += parent.AIR_ACCEL		#speed up moving to right
+			
+	#If you are not pressing left or right
+	if not Input.is_action_pressed("right_%s" % id) and not Input.is_action_pressed("left_%s" % id):
+		if parent.velocity.x < 0: #if characters was moving left
+			parent.velocity.x += parent.AIR_ACCEL/5 #add AIR_ACCEL to slow them down to zer0
+		elif parent.velocity.x > 0: #if characters was moving right
+			parent.velocity.x += -parent.AIR_ACCEL/5 #subtract AIR_ACCEL to slow them down to zer0
 	
 func LANDING():
-	if state_includes([states.AIR]):
-		if(parent.GroundL.is_colliding()) and parent.velocity.y > 0:
-			var collider = parent.GroundL.get_collider()
-			parent.fr()
-			if parent.velocity.y > 0:
-				parent.velocity.y = 0
-			parent.fastfall = false
-			return false
-	elif parent.GroundR.is_colliding() and parent.velocity.y > 0:
-		var collider2 = parent.GroundR.get_collider()
-		parent.fr()
-		if parent.velocity.y > 0:
-			parent.velocity.y = 0
-		parent.fastfall = false
-		return true
+	if state_includes([states.AIR]): #if the character is withing any of the provided states (within state_includes)
+		if(parent.GroundL.is_colliding()) and parent.velocity.y > 0: #if the characters left foot is touching the ground and its vert velocity is greater than 0
+			var collider = parent.GroundL.get_collider() #store what the foot is colliding with
+			parent.fr() #reset frame count
+			if parent.velocity.y > 0: 
+				parent.velocity.y = 0 #reset vert velocity
+			parent.fastfall = false #end the fastfall because we are now on the ground
+			return true
+			
+		elif (parent.GroundR.is_colliding()) and parent.velocity.y > 0: #if the characters right foot is touching the ground and its vert velocity is greater than zer0
+			var collider2 = parent.GroundR.get_collider() #store what the foot is colliding with
+			parent.fr() #reset frame count
+			if parent.velocity.y > 0: 
+				parent.velocity.y = 0 #reset vert velocity
+			parent.fastfall = false #end the fastfall because we are now on the ground
+			return true
 
 func FALLING():
-	if state_includes([states.STAND]):
+	if state_includes([states.STAND, states.DASH]): #if the character is withing any of the provided states (within state_includes)
 		if not parent.GroundL.is_colliding() and not parent.GroundR.is_colliding():	
-			return true
+			return true #if neither of the characters feet are touching the ground, it is falling(return true)
