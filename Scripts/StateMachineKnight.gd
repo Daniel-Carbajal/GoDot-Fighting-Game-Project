@@ -36,12 +36,15 @@ func get_transition(delta):
 			if Input.get_action_strength("jump_%s" % id):
 				parent.fr()
 				return states.JUMP_SQUAT
+			if Input.is_action_pressed("down_%s" % id):
+				parent.fr()
+				return states.CROUCH
 			if Input.get_action_strength("right_%s" % id) == 1: #if "right_%s" was the input of the player
 				parent.turn(false)
 				parent.velocity.x = parent.RUNSPEED 
 				parent.fr()
 				return states.DASH
-			if Input.get_action_strength("left_%s" % id) == 1:
+			if Input.get_action_strength("left_%s" % id) == 1: #get_action_strength returns a val that is >=0 but <= 1 (useful for controller input
 				parent.turn(true)
 				parent.velocity.x = -parent.RUNSPEED
 				parent.fr()
@@ -75,22 +78,57 @@ func get_transition(delta):
 			return states.AIR
 			
 		states.DASH:
-			if Input.is_action_pressed("left_%s" % id): #pressing left but facing right
+			if Input.get_action_strength("jump_%s" % id):
+				parent.fr()
+				return states.JUMP_SQUAT
+			
+			elif Input.is_action_pressed("down_%s" % id):
+				parent.fr()
+				return states.CROUCH
+				
+			elif Input.is_action_pressed("left_%s" % id): #pressing left but facing right
 				if parent.velocity.x > 0:
 					parent.fr()
 				parent.velocity.x = -parent.DASHSPEED
-				parent.turn(true)
-			elif Input.is_action_pressed("right_%s" % id): #pressing right but facing left
+				if parent.frame <= parent.dash_duration-1:
+					parent.turn(true)
+					return states.DASH
+				else:
+					parent.turn(true)
+					parent.fr()
+					return states.RUN
+					
+			elif Input.is_action_pressed("right_%s" % id): #pressing left but facing right
 				if parent.velocity.x < 0:
 					parent.fr()
 				parent.velocity.x = parent.DASHSPEED
-				parent.turn(false)
+				if parent.frame <= parent.dash_duration-1:
+					parent.turn(false)
+					return states.DASH
+				else:
+					parent.turn(false)
+					parent.fr()
+					return states.RUN
+					
 			else:
 				if parent.frame >= parent.dash_duration-1:
 					return states.STAND
 					
 		states.WALK:
-			pass
+			if Input.is_action_just_pressed("jump_%s" % id):
+				parent.fr()
+				return states.JUMP_SQUAT
+			if Input.is_action_just_pressed("down_%s" % id):
+				parent.fr()
+				return states.CROUCH
+			if Input.get_action_strength("left_%s" % id):
+				parent.velocity.x = -parent.WALKSPEED* Input.is_action_just_pressed("left_%s" % id)
+			elif Input.get_action_strength("right_%s" % id):
+				parent.velocity.x = parent.WALKSPEED* Input.is_action_just_pressed("right_%s" % id)
+			else:
+				parent.fr()
+				return states.STAND
+			
 		states.CROUCH:
 			if Input.is_action_just_pressed("jump_%s" % id):
 				parent.fr()
@@ -98,20 +136,13 @@ func get_transition(delta):
 			if Input.is_action_just_released("down_%s" % id):
 				parent.fr()
 				return states.STAND
-			elif parent.velocity.x > 0:
-				if parent.velocity.x > parent.RUNSPEED:
-					parent.velocity.x += -(parent.TRACTION*4)
-					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
-				else:
-					parent.velocity.x += -(parent.TRACTION/2)
-					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
-			elif parent.velocity.x < 0:
-				if abs(parent.velocity.x) > parent.RUNSPEED:
-					parent.velocity.x += -(parent.TRACTION*4)
-					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
-				else:
-					parent.velocity.x += -(parent.TRACTION*4)
-					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+			if parent.velocity.x > 0 and state == states.CROUCH: #if character still moving but in the standing state, it will slow down until 0 
+				parent.velocity.x += -parent.TRACTION/3
+				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+			elif parent.velocity.x < 0 and state == states.CROUCH:
+				parent.velocity.x += parent.TRACTION/3
+				parent.velocity.x = clamp(parent.velocity.x, parent.velocity.x,0) 
+			
 			
 		states.TURN:
 			if Input.is_action_just_pressed("jump_%s" % id):
@@ -194,8 +225,15 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.DASH:
 			parent.sprite.play("Run")
 			parent.states.text = str("DASH")
-			
-		
+		states.TURN:
+			#parent.sprite.play("Turn")
+			parent.states.text = str("TURN")
+		states.CROUCH:
+			#parent.sprite.play("Crouch)
+			parent.states.text = str("CROUCH")
+		states.RUN:
+			parent.sprite.play("Run")
+			parent.states.text = str("RUN")
 		states.JUMP_SQUAT:
 			parent.states.text = str("JUMP_SQUAT")
 		states.SHORT_HOP:

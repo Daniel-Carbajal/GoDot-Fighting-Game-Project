@@ -878,7 +878,6 @@ script = ExtResource("1_k2c4n")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("2_lu0at")
-id = null
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -908,8 +907,16 @@ target_position = Vector2(0, 10)
 collision_mask = 6
 
 [node name="Ledge_Grab_F" type="RayCast2D" parent="Raycasts"]
+position = Vector2(8, -10)
+scale = Vector2(2, 2)
+target_position = Vector2(20, 0)
+collision_mask = 8
 
 [node name="Ledge_Grab_B" type="RayCast2D" parent="Raycasts"]
+position = Vector2(0, -20)
+scale = Vector2(2, 2)
+target_position = Vector2(-11, 0)
+collision_mask = 9
 
 [node name="Frames" type="Label" parent="."]
 offset_left = -4.5
