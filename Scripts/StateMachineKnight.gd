@@ -8,10 +8,12 @@ func _ready():
 	add_state("FULL_HOP")
 	add_state("AIR")
 	add_state("DASH")
-	add_state("MOONWALK")
+	#add_state("MOONWALK") I dont think Im going to implement this into my game
 	add_state("WALK")
 	add_state("LANDING")
 	add_state("CROUCH")
+	add_state("TURN")
+	add_state("RUN")
 	call_deferred("set_state", states.STAND)
 	
 
@@ -87,12 +89,74 @@ func get_transition(delta):
 				if parent.frame >= parent.dash_duration-1:
 					return states.STAND
 					
-		states.MOONWALK:
-			pass
 		states.WALK:
 			pass
 		states.CROUCH:
-			pass
+			if Input.is_action_just_pressed("jump_%s" % id):
+				parent.fr()
+				return states.JUMP_SQUAT
+			if Input.is_action_just_released("down_%s" % id):
+				parent.fr()
+				return states.STAND
+			elif parent.velocity.x > 0:
+				if parent.velocity.x > parent.RUNSPEED:
+					parent.velocity.x += -(parent.TRACTION*4)
+					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				else:
+					parent.velocity.x += -(parent.TRACTION/2)
+					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+			elif parent.velocity.x < 0:
+				if abs(parent.velocity.x) > parent.RUNSPEED:
+					parent.velocity.x += -(parent.TRACTION*4)
+					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+				else:
+					parent.velocity.x += -(parent.TRACTION*4)
+					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+			
+		states.TURN:
+			if Input.is_action_just_pressed("jump_%s" % id):
+				parent.fr()
+				return states.JUMP_SQUAT
+			if parent.velocity.x > 0:
+				parent.turn(true)
+				parent.velocity.x += -parent.TRACTION*2
+				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+			elif parent.velocity.x < 0:
+				parent.turn(false)
+				parent.velocity.x += parent.TRACTION*2
+				parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+			else:
+				if not Input.is_action_pressed("left_%s" % id) and not Input.is_action_pressed("right_%s" % id):
+					parent.fr()
+					return states.STAND
+				else:
+					parent.fr()
+					return states.RUN
+			
+		states.RUN:
+			if Input.is_action_just_pressed("jump_%s" % id):
+				parent.fr()
+				return states.JUMP_SQUAT
+			if Input.is_action_just_pressed("down_%s" % id):
+				parent.fr()
+				return states.CROUCH
+			if Input.get_action_strength("left_%s" % id):
+				if parent.velocity.x <= 0:
+					parent.velocity.x = -parent.RUNSPEED
+					parent.turn(true)
+				else:
+					parent.fr()
+					return states.TURN
+			elif Input.get_action_strength("right_%s" % id):
+				if parent.velocity.x >= 0:
+					parent.velocity.x = parent.RUNSPEED
+					parent.turn(false)
+				else:
+					parent.fr()
+					return states.TURN
+			else:
+				parent.fr()
+				return states.STAND
 			
 		states.AIR:
 			AIRMOVEMENT()
@@ -130,6 +194,8 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.DASH:
 			parent.sprite.play("Run")
 			parent.states.text = str("DASH")
+			
+		
 		states.JUMP_SQUAT:
 			parent.states.text = str("JUMP_SQUAT")
 		states.SHORT_HOP:
@@ -194,7 +260,14 @@ func AIRMOVEMENT():
 func LANDING():
 	if state_includes([states.AIR]): #if the character is withing any of the provided states (within state_includes)
 		if(parent.GroundL.is_colliding()) and parent.velocity.y > 0: #if the characters left foot is touching the ground and its vert velocity is greater than 0
-			var collider = parent.GroundL.get_collider() #store what the foot is colliding with
+			#var collider = parent.GroundL.get_collider() #store what the foot is colliding with
+			
+			var col_pointL = parent.GroundL.get_collision_point()
+			var col_normL = parent.GroundR.get_collision_normal() 
+			var offset = 60
+			var new_pos = col_pointL.y - offset
+			parent.position.y = new_pos
+			
 			parent.frame = 0 #reset frame count
 			if parent.velocity.y > 0: 
 				parent.velocity.y = 0 #reset vert velocity
@@ -202,7 +275,14 @@ func LANDING():
 			return true
 			
 		elif parent.GroundR.is_colliding() and parent.velocity.y > 0: #if the characters right foot is touching the ground and its vert velocity is greater than zer0
-			var collider2 = parent.GroundR.get_collider() #store what the foot is colliding with
+			#var collider2 = parent.GroundR.get_collider() #store what the foot is colliding with
+			
+			var col_pointR = parent.GroundR.get_collision_point()
+			var col_normR = parent.GroundR.get_collision_normal()
+			var offset2 = 60
+			var new_pos2 = col_pointR.y - offset2
+			parent.position.y = new_pos2
+			
 			parent.frame = 0 #reset frame count
 			if parent.velocity.y > 0: 
 				parent.velocity.y = 0 #reset vert velocity
