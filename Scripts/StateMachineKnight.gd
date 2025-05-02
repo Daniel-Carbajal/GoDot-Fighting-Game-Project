@@ -65,19 +65,19 @@ func get_transition(delta):
 				return states.DASH
 			if parent.velocity.x > 0 and state == states.STAND: #if character still moving but in the standing state, it will slow down until 0 
 				parent.velocity.x += -parent.TRACTION*1
-				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				parent.velocity.x = clampf(parent.velocity.x,0,parent.velocity.x)
 			elif parent.velocity.x < 0 and state == states.STAND:
 				parent.velocity.x += parent.TRACTION*1
-				parent.velocity.x = clamp(parent.velocity.x, parent.velocity.x,0) 
+				parent.velocity.x = clampf(parent.velocity.x, parent.velocity.x,0) 
 				
 		states.JUMP_SQUAT:
 			if parent.frame == parent.jump_squat: #Once we reach the 3rd frame of JUMP_SQUAT state
 				if not Input.is_action_pressed("jump_%s" % id): #Check if the player isnt still holding the jump button
-					parent.velocity.x = lerp(parent.velocity.x,0.0,0.08)
+					parent.velocity.x = lerpf(parent.velocity.x,0.0,0.08)
 					parent.fr()
 					return states.SHORT_HOP #If they arent holding it do a short hop
 				else:
-					parent.velocity.x = lerp(parent.velocity.x,0.0,0.08)
+					parent.velocity.x = lerpf(parent.velocity.x,0.0,0.08)
 					parent.fr()
 					return states.FULL_HOP #otherwise if they are holding it, do a full jump
 					
@@ -152,10 +152,10 @@ func get_transition(delta):
 				return states.STAND
 			if parent.velocity.x > 0 and state == states.CROUCH: #if character still moving but in the standing state, it will slow down until 0 
 				parent.velocity.x += -parent.TRACTION/3
-				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				parent.velocity.x = clampf(parent.velocity.x,0,parent.velocity.x)
 			elif parent.velocity.x < 0 and state == states.CROUCH:
 				parent.velocity.x += parent.TRACTION/3
-				parent.velocity.x = clamp(parent.velocity.x, parent.velocity.x,0) 
+				parent.velocity.x = clampf(parent.velocity.x, parent.velocity.x,0) 
 			
 			
 		states.TURN:
@@ -165,11 +165,11 @@ func get_transition(delta):
 			if parent.velocity.x > 0:
 				parent.turn(true)
 				parent.velocity.x += -parent.TRACTION*2
-				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				parent.velocity.x = clampf(parent.velocity.x,0,parent.velocity.x)
 			elif parent.velocity.x < 0:
 				parent.turn(false)
 				parent.velocity.x += parent.TRACTION*2
-				parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+				parent.velocity.x = clampf(parent.velocity.x,parent.velocity.x,0)
 			else:
 				if not Input.is_action_pressed("left_%s" % id) and not Input.is_action_pressed("right_%s" % id):
 					parent.fr()
@@ -221,10 +221,10 @@ func get_transition(delta):
 					pass
 				if parent.velocity.x > 0: #If knights is moving to the right
 					parent.velocity.x = parent.velocity.x - parent.TRACTION/2 #Than the knight will slow down
-					parent.velocity.x = clamp(parent.velocity.x, 0 ,parent.velocity.x) #The knight is only able to slow down to a speed of zero(otherwise it would be moving to the left)
+					parent.velocity.x = clampf(parent.velocity.x, 0 ,parent.velocity.x) #The knight is only able to slow down to a speed of zero(otherwise it would be moving to the left)
 				elif parent.velocity.x < 0: #If knights moving to the left
 					parent.velocity.x = parent.velocity.x + parent.TRACTION/2 #than the knight will slow down 
-					parent.velocity.x = clamp(parent.velocity.x, parent.velocity.x, 0) #The knight can only slow down to zero (otherwise velocity.x > 0 is moving to right)
+					parent.velocity.x = clampf(parent.velocity.x, parent.velocity.x, 0) #The knight can only slow down to zero (otherwise velocity.x > 0 is moving to right)
 				if Input.is_action_just_pressed("jump_%s" % id): 
 					parent.fr()
 					return states.JUMP_SQUAT
@@ -263,7 +263,7 @@ func get_transition(delta):
 				parent.fr()
 				return states.AIR
 			#Facing Right
-			elif parent.GrabF.get_cast_to().x > 0:
+			elif parent.GrabF.get_target_position().x > 0:
 				if Input.is_action_just_pressed("left_%s" % id):
 					parent.velocity.x = (parent.AIR_ACCEL/2)
 					parent.regrab = 30
@@ -283,7 +283,7 @@ func get_transition(delta):
 					return states.LEDGE_JUMP
 				
 			#Facing Right
-			elif parent.GrabF.get_cast_to().x < 0:
+			elif parent.GrabF.get_target_position().x < 0:
 				if Input.is_action_just_pressed("right_%s" % id):
 					parent.velocity.x = (parent.AIR_ACCEL/2)
 					parent.regrab = 30
@@ -314,11 +314,11 @@ func get_transition(delta):
 			if parent.frame == 22:
 				parent.catch = false
 				parent.position.y -= 25
-				parent.position.x += 50*parent.direction()
+				#parent.position.x += 50*parent.direction()
 			if parent.frame == 25:
 				parent.velocity.y = 0
 				parent.velocity.x = 0
-				parent.move_and_collide()
+				#parent.move_and_collide(Vector2(parent.direction()*20,50))
 			if parent.frame == 30:
 				parent.reset_ledge()
 				parent.fr()
@@ -525,7 +525,7 @@ func FALLING():
 func Ledge():
 	if state_includes([states.AIR]):
 		if parent.GrabF.is_colliding():
-			var collider = parent.GrabF.collider()
+			var collider = parent.GrabF.get_collider()
 			if collider.get_node('Label').text == 'Ledge_L' and !Input.get_action_strength("down_%s" % id) > 0.6 and parent.regrab == 0 && !collider.is_grabbed:
 				if state_includes([states.AIR]):
 					if parent.velocity.y < 0:
@@ -559,7 +559,7 @@ func Ledge():
 				return true
 				
 		if parent.GrabB.is_colliding():
-			var collider = parent.GrabB.collider()
+			var collider = parent.GrabB.get_collider()
 			if collider.get_node('Label').text == 'Ledge_L' and !Input.get_action_strength("down_%s" % id) > 0.6 and parent.regrab == 0 && !collider.is_grabbed:
 				if state_includes([states.AIR]):
 					if parent.velocity.y < 0:

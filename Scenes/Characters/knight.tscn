@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=3 uid="uid://b1oyr85vu7svg"]
+[gd_scene load_steps=98 format=3 uid="uid://b1oyr85vu7svg"]
 
 [ext_resource type="Texture2D" uid="uid://cpscedp7xj6u1" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png" id="1_4j1js"]
 [ext_resource type="Script" path="res://Scripts/KNIGHT.gd" id="1_k2c4n"]
@@ -872,6 +872,20 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p3nqb"]
 size = Vector2(31, 55)
 
+[sub_resource type="SystemFont" id="SystemFont_mb0l6"]
+font_names = PackedStringArray("Malgun Gothic")
+multichannel_signed_distance_field = true
+
+[sub_resource type="FontVariation" id="FontVariation_vfac8"]
+base_font = SubResource("SystemFont_mb0l6")
+
+[sub_resource type="SystemFont" id="SystemFont_67jrl"]
+font_names = PackedStringArray("Fantasy")
+multichannel_signed_distance_field = true
+
+[sub_resource type="FontVariation" id="FontVariation_20fig"]
+base_font = SubResource("SystemFont_67jrl")
+
 [node name="KNIGHT" type="CharacterBody2D"]
 scale = Vector2(2, 2)
 script = ExtResource("1_k2c4n")
@@ -900,34 +914,42 @@ shape = SubResource("RectangleShape2D_p3nqb")
 position = Vector2(-10, 21)
 target_position = Vector2(0, 10)
 collision_mask = 6
+hit_from_inside = true
 
 [node name="GroundR" type="RayCast2D" parent="Raycasts"]
 position = Vector2(10, 21)
 target_position = Vector2(0, 10)
 collision_mask = 6
+hit_from_inside = true
 
 [node name="Ledge_Grab_F" type="RayCast2D" parent="Raycasts"]
 position = Vector2(8, -10)
 scale = Vector2(2, 2)
 target_position = Vector2(20, 0)
 collision_mask = 8
+hit_from_inside = true
+collide_with_areas = true
 
 [node name="Ledge_Grab_B" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -20)
 scale = Vector2(2, 2)
 target_position = Vector2(-11, 0)
-collision_mask = 9
+collision_mask = 8
+hit_from_inside = true
+collide_with_areas = true
 
 [node name="Frames" type="Label" parent="."]
 offset_left = -4.5
 offset_top = -64.5
 offset_right = 35.5
 offset_bottom = -41.5
+theme_override_fonts/font = SubResource("FontVariation_vfac8")
 text = "0"
 
 [node name="State" type="Label" parent="."]
-offset_left = -17.5
-offset_top = -49.5
-offset_right = 22.5
-offset_bottom = -26.5
+offset_left = -12.0
+offset_top = -48.0
+offset_right = 28.0
+offset_bottom = -25.0
+theme_override_fonts/font = SubResource("FontVariation_20fig")
 text = "Test"

@@ -1,22 +1,33 @@
-[gd_scene load_steps=3 format=3 uid="uid://coy37paahj248"]
+[gd_scene load_steps=5 format=3 uid="uid://coy37paahj248"]
 
 [ext_resource type="Script" path="res://Scripts/ledge.gd" id="1_86j8y"]
+
+[sub_resource type="SystemFont" id="SystemFont_4m4ws"]
+font_names = PackedStringArray("Fantasy")
+multichannel_signed_distance_field = true
+
+[sub_resource type="FontVariation" id="FontVariation_61684"]
+base_font = SubResource("SystemFont_4m4ws")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yngpn"]
 size = Vector2(37.5, 20.6)
 
 [node name="Ledge" type="Area2D"]
 collision_layer = 8
+collision_mask = 8
 script = ExtResource("1_86j8y")
 
 [node name="Label" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
+theme_override_fonts/font = SubResource("FontVariation_61684")
 text = "ledge"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+light_mask = 9
+visibility_layer = 9
 shape = SubResource("RectangleShape2D_yngpn")
 
 [connection signal="body_exited" from="." to="." method="_on_Ledge_body_exited"]
