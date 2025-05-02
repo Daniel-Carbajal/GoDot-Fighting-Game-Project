@@ -3,26 +3,37 @@ extends CharacterBody2D
 #Global Variables
 var frame = 0
 
+#Landing Variables
+var landing_frames = 5
+var lag_frames = 5
+
 #Air Variables
 var dash_duration = 10
 var jump_squat = 5 #Before the character jumps it enters JUMP_SQUAT which is 3 frames
-var landing_frames = 5
-var lag_frames = 5
 var fastfall = false
+var airJump = 0
+@export var airJumpMax = 1
+
+#Ledge Variables
+var last_ledge = false
+var regrab = 30
+var catch = false
 
 #OnReady Variables
 @onready var GroundR = get_node('Raycasts/GroundR')
 @onready var GroundL = get_node('Raycasts/GroundL')
+@onready var GrabF = get_node('Raycasts/Ledge_Grab_F')
+@onready var GrabB = get_node('Raycasts/Ledge_Grab_B')
 @onready var states = $State
 @onready var sprite = get_node("Sprite/AnimationPlayer")
 
 #Knights main attributes
-var RUNSPEED = 340
-var DASHSPEED = 390
+var RUNSPEED = 400
+var DASHSPEED = 450
 var WALKSPEED = 200
 var GRAVITY = 1800
-var JUMPFORCE = 500
-var MAX_JUMPFORCE = 800
+var JUMPFORCE = 600
+var MAX_JUMPFORCE = 1000
 var DOUBLEJUMPFORCE = 1000
 var MAXAIRSPEED = 300
 var AIR_ACCEL = 25
@@ -48,6 +59,11 @@ func turn(direction):
 func fr():
 	frame = 0
 
+func reset_ledge():
+	last_ledge = false
+
+func reset_Jumps():
+	airJump = airJumpMax
 
 
 # Called when the node enters the scene tree for the first time.

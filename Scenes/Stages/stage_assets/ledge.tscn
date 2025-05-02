@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://coy37paahj248"]
+
+[ext_resource type="Script" path="res://Scripts/ledge.gd" id="1_86j8y"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yngpn"]
+size = Vector2(37.5, 20.6)
+
+[node name="Ledge" type="Area2D"]
+collision_layer = 8
+script = ExtResource("1_86j8y")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "ledge"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_yngpn")
+
+[connection signal="body_exited" from="." to="." method="_on_Ledge_body_exited"]
