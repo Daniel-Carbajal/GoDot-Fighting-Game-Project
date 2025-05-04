@@ -46,7 +46,6 @@ editor_draw_drag_margin = true
 
 [node name="KNIGHT" parent="." instance=ExtResource("2_n3eht")]
 position = Vector2(354, -31)
-collision_layer = 1
 
 [node name="Ledge" parent="." instance=ExtResource("3_36lh4")]
 position = Vector2(481, 212)

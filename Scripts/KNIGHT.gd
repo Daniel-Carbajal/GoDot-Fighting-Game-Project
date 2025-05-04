@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 #Global Variables
 var frame = 0
+#4var direction = Vector2()
 
 #Landing Variables
 var landing_frames = 5

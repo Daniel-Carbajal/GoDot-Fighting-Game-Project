@@ -250,7 +250,7 @@ func get_transition(delta):
 				return states.LEDGE_HOLD
 			
 		states.LEDGE_HOLD:
-			if parent.frame >= 390: #3.5seconds
+			if parent.frame >= 390: 
 				self.parent.position.y += -25
 				parent.fr()
 				return states.AIR 
@@ -275,7 +275,7 @@ func get_transition(delta):
 				elif Input.is_action_just_pressed("right_%s" % id):
 					parent.fr()
 					return states.LEDGE_CLIMB
-				elif Input.is_action_just_pressed("sheild_%s" % id):
+				elif Input.is_action_just_pressed("shield_%s" % id):
 					parent.fr()
 					return states.LEDGE_ROLL
 				elif Input.is_action_just_pressed("jump_%s" % id):
@@ -318,7 +318,7 @@ func get_transition(delta):
 			if parent.frame == 25:
 				parent.velocity.y = 0
 				parent.velocity.x = 0
-				#parent.move_and_collide(Vector2(parent.direction()*20,50))
+				#parent.move_and_collide(Vector2(parent.direction*20,50))
 			if parent.frame == 30:
 				parent.reset_ledge()
 				parent.fr()
@@ -338,6 +338,17 @@ func get_transition(delta):
 			if parent.frame == 10:
 				parent.catch = false
 				parent.position.y -= 20
+				if Input.is_action_just_pressed("jump_%s" % id) and parent.airJump > 0:
+					parent.fastfall = false
+					parent.velocity.y = -parent.DOUBLEJUMPFORCE
+					parent.velocity.x = 0
+					parent.airJump -= 1
+					parent.fr()
+					return states.AIR
+			if parent.frame == 15:
+				parent.position.y -= 20
+				parent.velocity.y -= parent.DOUBLEJUMPFORCE
+				#parent.velocity.x += 220*parent.direction()
 				if Input.is_action_just_pressed("jump_%s" % id) and parent.airJump > 0:
 					parent.fastfall = false
 					parent.velocity.y = -parent.DOUBLEJUMPFORCE

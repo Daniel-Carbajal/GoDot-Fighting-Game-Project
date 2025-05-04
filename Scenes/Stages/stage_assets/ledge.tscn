@@ -4,6 +4,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_4m4ws"]
 font_names = PackedStringArray("Fantasy")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="FontVariation" id="FontVariation_61684"]

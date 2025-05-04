@@ -874,6 +874,7 @@ size = Vector2(31, 55)
 
 [sub_resource type="SystemFont" id="SystemFont_mb0l6"]
 font_names = PackedStringArray("Malgun Gothic")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="FontVariation" id="FontVariation_vfac8"]
@@ -881,6 +882,7 @@ base_font = SubResource("SystemFont_mb0l6")
 
 [sub_resource type="SystemFont" id="SystemFont_67jrl"]
 font_names = PackedStringArray("Fantasy")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="FontVariation" id="FontVariation_20fig"]
@@ -888,6 +890,7 @@ base_font = SubResource("SystemFont_67jrl")
 
 [node name="KNIGHT" type="CharacterBody2D"]
 scale = Vector2(2, 2)
+collision_layer = 7
 script = ExtResource("1_k2c4n")
 
 [node name="StateMachine" type="Node" parent="."]
@@ -933,7 +936,7 @@ collide_with_areas = true
 [node name="Ledge_Grab_B" type="RayCast2D" parent="Raycasts"]
 position = Vector2(0, -20)
 scale = Vector2(2, 2)
-target_position = Vector2(-11, 0)
+target_position = Vector2(-16, 0)
 collision_mask = 8
 hit_from_inside = true
 collide_with_areas = true
