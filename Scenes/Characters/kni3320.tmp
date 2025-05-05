@@ -958,15 +958,8 @@ theme_override_fonts/font = SubResource("FontVariation_20fig")
 text = "Test"
 
 [node name="facing" type="Label" parent="."]
-offset_left = 44.0
+offset_left = 20.0
 offset_top = -56.0
-offset_right = 84.0
-offset_bottom = -33.0
-text = "right"
-
-[node name="facingB" type="Label" parent="."]
-offset_left = -80.0
-offset_top = -56.0
-offset_right = -40.0
+offset_right = 60.0
 offset_bottom = -33.0
 text = "right"

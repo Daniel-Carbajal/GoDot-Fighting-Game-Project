@@ -263,16 +263,16 @@ func get_transition(delta):
 				parent.fr()
 				return states.AIR
 			#Facing Right
-			elif parent.GrabF.get_target_position().x > 0:
-				if Input.is_action_just_pressed("left_%s" % id): 
+			elif parent.GrabF.rotation_degrees == 0: 
+				if Input.is_action_just_pressed("left_%s" % id): #Facing ledge on right and press left, player should fall
 					parent.velocity.x = (parent.AIR_ACCEL/2)
 					parent.regrab = 30
 					parent.reset_ledge()
-					self.parent.position.y += -25
+					#self.parent.position.y += -25 Not really needed, it was also causing a collision error with the platform
 					parent.catch = false
 					parent.fr()
 					return states.AIR
-				elif Input.is_action_just_pressed("right_%s" % id): #facing right, press right climb
+				elif Input.is_action_just_pressed("right_%s" % id): #facing ledge on right and press right, then climb ledge
 					parent.fr()
 					return states.LEDGE_CLIMB 
 				elif Input.is_action_just_pressed("shield_%s" % id): # NOT IMPLEMENTED
@@ -283,16 +283,16 @@ func get_transition(delta):
 					return states.LEDGE_JUMP
 				
 			#Facing Left
-			elif parent.GrabF.get_target_position().x < 0:
-				if Input.is_action_just_pressed("right_%s" % id):
+			elif parent.GrabF.rotation_degrees == -180:
+				if Input.is_action_just_pressed("right_%s" % id): #Facing ledge on left and press right, player should fall
 					parent.velocity.x = (parent.AIR_ACCEL/2)
 					parent.regrab = 30
 					parent.reset_ledge()
-					self.parent.position.y += -25
+					#self.parent.position.y += -25 Not really needed, it was also causing a collision error with the platform
 					parent.catch = false
 					parent.fr()
 					return states.AIR
-				elif Input.is_action_just_pressed("left_%s" % id): # Facing ledge to the left and press left, climb
+				elif Input.is_action_just_pressed("left_%s" % id): # Facing ledge on left and press left, then climb ledge
 					parent.fr()
 					return states.LEDGE_CLIMB
 				elif Input.is_action_just_pressed("sheild_%s" % id): # NOT IMPLEMENTED

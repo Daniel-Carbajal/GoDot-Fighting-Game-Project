@@ -80,4 +80,6 @@ func _ready():
 
 func _physics_process(delta):
 	$Frames.text = str(frame)
+	$facing.text = str(GrabF.rotation_degrees)
+	$facingB.text = str(GrabB.rotation_degrees)
 
