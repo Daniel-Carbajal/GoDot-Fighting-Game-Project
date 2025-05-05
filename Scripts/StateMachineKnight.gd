@@ -264,7 +264,7 @@ func get_transition(delta):
 				return states.AIR
 			#Facing Right
 			elif parent.GrabF.get_target_position().x > 0:
-				if Input.is_action_just_pressed("left_%s" % id):
+				if Input.is_action_just_pressed("left_%s" % id): 
 					parent.velocity.x = (parent.AIR_ACCEL/2)
 					parent.regrab = 30
 					parent.reset_ledge()
@@ -272,17 +272,17 @@ func get_transition(delta):
 					parent.catch = false
 					parent.fr()
 					return states.AIR
-				elif Input.is_action_just_pressed("right_%s" % id):
+				elif Input.is_action_just_pressed("right_%s" % id): #facing right, press right climb
 					parent.fr()
-					return states.LEDGE_CLIMB
-				elif Input.is_action_just_pressed("shield_%s" % id):
+					return states.LEDGE_CLIMB 
+				elif Input.is_action_just_pressed("shield_%s" % id): # NOT IMPLEMENTED
 					parent.fr()
 					return states.LEDGE_ROLL
-				elif Input.is_action_just_pressed("jump_%s" % id):
+				elif Input.is_action_just_pressed("jump_%s" % id): 
 					parent.fr()
 					return states.LEDGE_JUMP
 				
-			#Facing Right
+			#Facing Left
 			elif parent.GrabF.get_target_position().x < 0:
 				if Input.is_action_just_pressed("right_%s" % id):
 					parent.velocity.x = (parent.AIR_ACCEL/2)
@@ -292,10 +292,10 @@ func get_transition(delta):
 					parent.catch = false
 					parent.fr()
 					return states.AIR
-				elif Input.is_action_just_pressed("left_%s" % id):
+				elif Input.is_action_just_pressed("left_%s" % id): # Facing ledge to the left and press left, climb
 					parent.fr()
 					return states.LEDGE_CLIMB
-				elif Input.is_action_just_pressed("sheild_%s" % id):
+				elif Input.is_action_just_pressed("sheild_%s" % id): # NOT IMPLEMENTED
 					parent.fr()
 					return states.LEDGE_ROLL
 				elif Input.is_action_just_pressed("jump_%s" % id):
@@ -348,7 +348,7 @@ func get_transition(delta):
 			if parent.frame == 15:
 				parent.position.y -= 20
 				parent.velocity.y -= parent.DOUBLEJUMPFORCE
-				#parent.velocity.x += 220*parent.direction()
+				#parent.velocity.x += 220*parent.direction() Meant to be an arc that the character jumps into based on the direction the character is facing
 				if Input.is_action_just_pressed("jump_%s" % id) and parent.airJump > 0:
 					parent.fastfall = false
 					parent.velocity.y = -parent.DOUBLEJUMPFORCE

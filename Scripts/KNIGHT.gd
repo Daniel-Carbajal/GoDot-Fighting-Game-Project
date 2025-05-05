@@ -53,9 +53,16 @@ func turn(direction):
 	var dir = 0
 	if direction:
 		dir = -1
-	else:
+		GrabF.position.x = -8
+		GrabF.global_rotation_degrees = 180
+		GrabB.global_rotation_degrees = 180
+	elif direction == false:
 		dir = 1
+		GrabF.position.x = 8
+		GrabF.global_rotation_degrees = 0
+		GrabB.global_rotation_degrees = 0
 	$Sprite.set_flip_h(direction)
+	
 
 func fr():
 	frame = 0
