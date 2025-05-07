@@ -7,7 +7,7 @@ extends Area2D
 var is_grabbed = false
 
 func _physics_process(delta):
-	grab_state.text = str(is_grabbed)
+	grab_state.text = str(is_grabbed) #debug for regrab
 
 func _on_Ledge_body_exited(body): #moniterable must be set to true and be able to collide with the player, so it can detect when a player enters it
 	is_grabbed = false #so that two people can not grab THIS ledge at the same time
