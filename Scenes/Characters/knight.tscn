@@ -916,13 +916,13 @@ debug_color = Color(0.999958, 0.592055, 0.538719, 0.42)
 [node name="Raycasts" type="Node2D" parent="."]
 
 [node name="GroundL" type="RayCast2D" parent="Raycasts"]
-position = Vector2(-10, 21)
+position = Vector2(-13, 22)
 target_position = Vector2(0, 10)
 collision_mask = 6
 hit_from_inside = true
 
 [node name="GroundR" type="RayCast2D" parent="Raycasts"]
-position = Vector2(10, 21)
+position = Vector2(13, 22)
 target_position = Vector2(0, 10)
 collision_mask = 6
 hit_from_inside = true
