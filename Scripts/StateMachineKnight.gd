@@ -150,6 +150,10 @@ func get_transition(delta):
 			if Input.is_action_just_released("down_%s" % id):
 				parent.fr()
 				return states.STAND
+			if Input.is_action_pressed("right_%s" % id):
+				parent.velocity.x = parent.CROUCHSPEED
+			elif Input.is_action_pressed("left_%s" % id):
+				parent.velocity.x = -parent.CROUCHSPEED
 			if parent.velocity.x > 0 and state == states.CROUCH: #if character still moving but in the standing state, it will slow down until 0 
 				parent.velocity.x += -parent.TRACTION/3
 				parent.velocity.x = clampf(parent.velocity.x,0,parent.velocity.x)
@@ -302,7 +306,7 @@ func get_transition(delta):
 					parent.fr()
 					return states.LEDGE_JUMP
 				
-		states.LEDGE_CLIMB:
+		states.LEDGE_CLIMB: # frame by frame teleporting character to work with climb anim
 			if parent.frame == 1:
 				pass
 			if parent.frame == 5:
@@ -315,6 +319,10 @@ func get_transition(delta):
 				parent.catch = false
 				parent.position.y -= 25
 				#parent.position.x += 50*parent.direction()
+				if parent.GrabF.global_rotation_degrees == -180:
+					parent.position.x -= 30
+				elif parent.GrabF.global_rotation_degrees == 0:
+					parent.position.x += 30
 			if parent.frame == 25:
 				parent.velocity.y = 0
 				parent.velocity.x = 0
@@ -348,7 +356,11 @@ func get_transition(delta):
 			if parent.frame == 15:
 				parent.position.y -= 20
 				parent.velocity.y -= parent.DOUBLEJUMPFORCE
-				#parent.velocity.x += 220*parent.direction() Meant to be an arc that the character jumps into based on the direction the character is facing
+				if parent.GrabF.global_rotation_degrees == -180:
+					parent.velocity.x -= 220
+				elif parent.GrabF.global_rotation_degrees == 0:
+					parent.velocity.x += 220
+				#parent.velocity.x += 220 #Meant to be an arc that the character jumps into based on the direction the character is facing
 				if Input.is_action_just_pressed("jump_%s" % id) and parent.airJump > 0:
 					parent.fastfall = false
 					parent.velocity.y = -parent.DOUBLEJUMPFORCE

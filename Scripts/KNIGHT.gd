@@ -30,6 +30,7 @@ var catch = false
 
 #Knights main attributes
 var RUNSPEED = 400
+var CROUCHSPEED = 150
 var DASHSPEED = 450
 var WALKSPEED = 200
 var GRAVITY = 1800
@@ -54,7 +55,7 @@ func turn(direction):
 	if direction:
 		dir = -1
 		GrabF.position.x = -8
-		GrabF.global_rotation_degrees = 180
+		GrabF.global_rotation_degrees = 180 
 		GrabB.global_rotation_degrees = 180
 	elif direction == false:
 		dir = 1

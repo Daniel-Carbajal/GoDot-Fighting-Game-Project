@@ -23,12 +23,10 @@ position = Vector2(959.75, 770)
 shape = SubResource("RectangleShape2D_4qs5d")
 
 [node name="wall" type="StaticBody2D" parent="."]
-visible = false
 position = Vector2(-960, -540)
 collision_layer = 2
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="wall"]
-visible = false
 position = Vector2(960, 832)
 polygon = PackedVector2Array(-480, -41, -426, 13, -341, 53, 339, 53, 426, 13, 480, -41)
 
@@ -49,12 +47,12 @@ position = Vector2(354, -31)
 collision_layer = 1
 
 [node name="Ledge" parent="." instance=ExtResource("3_36lh4")]
-position = Vector2(481, 212)
+position = Vector2(481, 230)
 scale = Vector2(2.6562, 1.94312)
 ledge_Side = "Right"
 
 [node name="Ledge2" parent="." instance=ExtResource("3_36lh4")]
-position = Vector2(-482, 212)
+position = Vector2(-482, 230)
 scale = Vector2(2.73473, 1.79891)
 
 [node name="Ledge3" parent="." instance=ExtResource("3_36lh4")]
