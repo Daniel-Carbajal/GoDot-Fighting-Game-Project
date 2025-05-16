@@ -7,6 +7,7 @@ var frame = 0
 #Landing Variables
 var landing_frames = 5
 var lag_frames = 5
+var perfect_wavedash_modifier = .75
 
 #Air Variables
 var dash_duration = 10

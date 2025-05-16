@@ -72,6 +72,14 @@ func get_transition(delta):
 				
 		states.JUMP_SQUAT:
 			if parent.frame == parent.jump_squat: #Once we reach the 3rd frame of JUMP_SQUAT state
+				if(Input.is_action_pressed("shield_%s" % id)) and (Input.is_action_pressed("left_%s" % id) or Input.is_action_pressed("right_%s" % id)):
+					if (Input.is_action_pressed("right_%s" % id)):
+						parent.velocity.x = parent.air_dodge_speed/parent.perfect_wavedash_modifier
+					if(Input.is_action_pressed("left_%s" % id)):
+						parent.velocity.x = -parent.air_dodge_speed/parent.perfect_wavedash_modifier
+					parent.lag_frames = 6
+					parent.fr()
+					return states.LANDING
 				if not Input.is_action_pressed("jump_%s" % id): #Check if the player isnt still holding the jump button
 					parent.velocity.x = lerpf(parent.velocity.x,0.0,0.08)
 					parent.fr()
@@ -92,7 +100,7 @@ func get_transition(delta):
 			return states.AIR
 			
 		states.DASH:
-			if Input.get_action_strength("jump_%s" % id):
+			if Input.is_action_just_pressed("jump_%s" % id):
 				parent.fr()
 				return states.JUMP_SQUAT
 			
