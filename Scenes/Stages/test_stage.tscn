@@ -1,19 +1,43 @@
-[gd_scene load_steps=5 format=3 uid="uid://13txl7inet7o"]
+[gd_scene load_steps=8 format=3 uid="uid://13txl7inet7o"]
 
 [ext_resource type="Texture2D" uid="uid://3w45al3l6f" path="res://Scenes/Stages/1.png" id="1_kn0xw"]
+[ext_resource type="Texture2D" uid="uid://dnqc6lsqp0x5u" path="res://Assets/Stage Art/layer_1.png" id="1_xqw5l"]
+[ext_resource type="Texture2D" uid="uid://b2jk0hobe4bch" path="res://Assets/Stage Art/layer_2.png" id="2_j3krv"]
 [ext_resource type="PackedScene" uid="uid://b1oyr85vu7svg" path="res://Scenes/Characters/knight.tscn" id="2_n3eht"]
 [ext_resource type="PackedScene" uid="uid://coy37paahj248" path="res://Scenes/Stages/stage_assets/ledge.tscn" id="3_36lh4"]
+[ext_resource type="Script" path="res://Scripts/stage_cam.gd" id="4_tukx1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4qs5d"]
 size = Vector2(965.5, 40)
 
 [node name="test stage" type="Node2D"]
 
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2(542, 373)
+scale = Vector2(7.2, 7.2)
+motion_scale = Vector2(0.3, 0.3)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource("1_xqw5l")
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2(-809, -135)
+scale = Vector2(7.2, 7.2)
+motion_scale = Vector2(0.6, 0.6)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
+texture = ExtResource("2_j3krv")
+centered = false
+
 [node name="stage_template2" type="Sprite2D" parent="."]
+visible = false
 scale = Vector2(2, 2)
 texture = ExtResource("1_kn0xw")
 
 [node name="floor" type="StaticBody2D" parent="."]
+z_index = 3
 position = Vector2(-960, -540)
 collision_layer = 4
 
@@ -41,9 +65,10 @@ drag_left_margin = 0.0
 drag_right_margin = 0.0
 editor_draw_limits = true
 editor_draw_drag_margin = true
+script = ExtResource("4_tukx1")
 
 [node name="KNIGHT" parent="." instance=ExtResource("2_n3eht")]
-position = Vector2(354, -31)
+position = Vector2(0, -36)
 collision_layer = 1
 
 [node name="Ledge_R" parent="." instance=ExtResource("3_36lh4")]
