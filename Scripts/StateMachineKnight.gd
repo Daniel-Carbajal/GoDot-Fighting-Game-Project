@@ -19,6 +19,12 @@ func _ready():
 	add_state("LEDGE_CLIMB")
 	add_state("LEDGE_JUMP")
 	add_state("LEDGE_ROLL")
+	
+	add_state("GROUND_ATTACK")
+	add_state("DOWN_TILT")
+	add_state("FORWARD_TILT")
+	add_state("UP_TILT")
+	add_state("JAB")
 	call_deferred("set_state", states.STAND)
 	
 
@@ -43,6 +49,10 @@ func get_transition(delta):
 		return states.LEDGE_CATCH
 	else:
 		parent.reset_ledge()
+		
+	if Input.is_action_just_pressed("attack_%s" %id) && TILT() == true:
+		parent.fr()
+		return states.GROUND_ATTACK
 		
 	match state: #like case or pattern matching
 		states.STAND:
@@ -416,6 +426,71 @@ func get_transition(delta):
 				parent.reset_ledge()
 				parent.fr()
 				return states.STAND
+				
+		states.GROUND_ATTACK:
+			if Input.is_action_pressed("up_%s" % id):
+				parent.fr()
+				return states.UP_TILT
+			if Input.is_action_pressed("down_%s" % id):
+				parent.fr()
+				return states.DOWN_TILT
+			if Input.is_action_pressed("left_%s" % id):
+				parent.turn(true)
+				parent.fr()
+				return states.FORWARD_TILT
+			if Input.is_action_pressed("right_%s" % id):
+				parent.turn(false)
+				parent.fr()
+				return states.FORWARD_TILT
+			parent.fr()
+			return states.JAB
+			
+		states.FORWARD_TILT:
+			if parent.frame == 0:
+				parent.forward_swing()
+				pass
+			if parent.frame >= 1:
+				if parent.velocity.x > 0:
+					parent.velocity.x += -parent.TRACTION/2
+					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				elif parent.velocity.x < 0:
+					parent.velocity.x += parent.TRACTION/2
+					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+			if parent.forward_swing() == true:
+				if Input.is_action_pressed("right_%s" % id):
+					parent.fr()
+					return states.RUN
+				elif Input.is_action_pressed("left_%s" % id):
+					parent.fr()
+					return states.RUN
+				else:
+					parent.fr()
+					return states.STAND
+		
+		states.UP_TILT:
+			pass
+		
+		states.DOWN_TILT:
+			if parent.frame == 0:
+				parent.down_swing_1()
+				pass
+			if parent.frame >= 1:
+				if parent.velocity.x > 0:
+					parent.velocity.x += -parent.TRACTION*3
+					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				elif parent.velocity.x < 0:
+					parent.velocity.x += parent.TRACTION*3
+					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+			if parent.down_swing_1() == true:
+				if Input.is_action_pressed("down_%s" % id):
+					parent.fr()
+					return states.CROUCH
+				else:
+					parent.fr()
+					return states.STAND
+					
+		states.JAB:
+			pass
 
 func enter_state(new_state, old_state): #Once you have entered a state, play the aproporiate animation
 	match new_state:
@@ -467,7 +542,20 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.LEDGE_ROLL:
 			#parent.sprite.play("LEDGE_ROLL")
 			parent.states.text = str("LEDGE_ROLL")
-
+		states.GROUND_ATTACK:
+			parent.states.text = str("GROUND_ATTACK")
+		states.FORWARD_TILT:
+			parent.states.text = str("FORWARD_TILT")
+			parent.sprite.play("Attack_One")
+		states.DOWN_TILT:
+			parent.states.text = str("DOWN_TILT")
+			parent.sprite.play("Attack_Two")
+		states.UP_TILT:
+			parent.states.text = str("UP_TILT")
+		states.JAB:
+			parent.states.text = str("JAB")
+			#parent.sprite.play("Jab")
+			
 func exit_state(old_state, new_state):
 	pass
 
@@ -622,3 +710,7 @@ func Ledge():
 				collider.is_grabbed = true
 				parent.last_ledge = collider
 				return true
+
+func TILT():
+	if state_includes([states.STAND, states.DASH, states.RUN, states.WALK, states.CROUCH]):
+		return true

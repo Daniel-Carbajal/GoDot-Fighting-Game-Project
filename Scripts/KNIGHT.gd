@@ -21,6 +21,10 @@ var last_ledge = false
 var regrab = 30
 var catch = false
 
+#Hitboxes
+@export var hitbox: PackedScene
+var selfState
+
 #OnReady Variables
 @onready var GroundR = get_node('Raycasts/GroundR')
 @onready var GroundL = get_node('Raycasts/GroundL')
@@ -48,17 +52,28 @@ var ROLL_DISTANCE = 350
 var air_dodge_speed = 500
 var UP_B_LAUNCHSPEED = 700
 
+func create_hitbox(width, height, damage, angle, base_kb, kb_scaling, duration, type, points, angle_flipper, hitlag=1):
+	var hitbox_instance = hitbox.instantiate()
+	self.add_child(hitbox_instance)
+	#rotate the points
+	if GrabF.global_rotation_degrees == 0: #if we are facing right
+		hitbox_instance.set_parameters(width, height, damage, angle, base_kb, kb_scaling, duration, type, points, angle_flipper, hitlag)
+	else: #otherwise if the character is facing left
+		var flip_x_points = Vector2(-points.x, points.y)
+		hitbox_instance.set_parameters(width, height, damage, -angle+180, base_kb, kb_scaling, duration, type, flip_x_points, angle_flipper, hitlag)
+	return hitbox_instance
+
 func updateframes(delta):
 	frame += 1
 
 func turn(direction):
 	var dir = 0
-	if direction:
+	if direction: #facing right and turning left
 		dir = -1
 		GrabF.position.x = -8
 		GrabF.global_rotation_degrees = 180 
 		GrabB.global_rotation_degrees = 180
-	elif direction == false:
+	elif direction == false: #facing left and turning right
 		dir = 1
 		GrabF.position.x = 8
 		GrabF.global_rotation_degrees = 0
@@ -84,4 +99,17 @@ func _physics_process(delta):
 	$Frames.text = str(frame)
 	$facing.text = str(GrabF.rotation_degrees)
 	$facingB.text = str(GrabB.rotation_degrees)
+	selfState = states.text
 
+#Tilt attacks
+func down_swing_1():
+	if frame == 4:
+		create_hitbox(35,10,8,90,3,120,3,'normal',Vector2(7,18.5),0,1)
+	if frame >= 12:
+		return true
+
+func forward_swing():
+	if frame == 10:
+		create_hitbox(35,12,5,90,3,120,3,'normal',Vector2(10,8),0,1)
+	if frame >= 21:
+		return true
