@@ -2,7 +2,18 @@ extends CharacterBody2D
 
 #Global Variables
 var frame = 0
-#4var direction = Vector2()
+
+#Attributes
+@export var percentage = 0
+@export var stocks = 0
+@export var weight = 150
+
+#Knockback
+var hdecay
+var vdecay
+var knockback
+var hitstun
+var connected:bool
 
 #Landing Variables
 var landing_frames = 5
@@ -112,4 +123,11 @@ func forward_swing():
 	if frame == 10:
 		create_hitbox(35,12,5,90,3,120,3,'normal',Vector2(10,8),0,1)
 	if frame >= 21:
+		return true
+		
+func up_swing():
+	if frame == 8:
+		create_hitbox(32,10,8,90,3,120,3,'normal',Vector2(20,-32),0,1)
+		create_hitbox(18.5,25.5,8,90,3,120,3,'normal',Vector2(33.5,4),0,1)
+	if frame >= 20:
 		return true

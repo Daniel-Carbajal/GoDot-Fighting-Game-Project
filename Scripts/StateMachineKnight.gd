@@ -468,7 +468,23 @@ func get_transition(delta):
 					return states.STAND
 		
 		states.UP_TILT:
-			pass
+			if parent.frame == 0:
+				parent.up_swing()
+				pass
+			if parent.frame >= 1:
+				if parent.velocity.x > 0:
+					parent.velocity.x += -parent.TRACTION*2
+					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				elif parent.velocity.x < 0:
+					parent.velocity.x += parent.TRACTION*2
+					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+			if parent.up_swing() == true:
+				if Input.is_action_pressed("up_%s" % id):
+					parent.fr()
+					return states.STAND
+				else:
+					parent.fr()
+					return states.STAND
 		
 		states.DOWN_TILT:
 			if parent.frame == 0:
@@ -552,6 +568,7 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 			parent.sprite.play("Attack_Two")
 		states.UP_TILT:
 			parent.states.text = str("UP_TILT")
+			parent.sprite.play("Attack_Three")
 		states.JAB:
 			parent.states.text = str("JAB")
 			#parent.sprite.play("Jab")

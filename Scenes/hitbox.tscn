@@ -6,6 +6,16 @@
 
 [node name="Hitbox" type="Area2D"]
 script = ExtResource("1_luxcy")
+width = null
+height = null
+damage = null
+angle = null
+base_kb = null
+kb_scaling = null
+duration = null
+hitlag_modifier = null
+type = null
+angle_flipper = null
 
 [node name="Hitbox_Shape" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_8mlio")

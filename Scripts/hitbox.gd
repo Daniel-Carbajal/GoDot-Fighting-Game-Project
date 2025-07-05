@@ -37,8 +37,20 @@ func set_parameters(w,h,d,a,b_kb,kb_s,dur,t,p,af,hit,parent=get_parent()):
 	set_physics_process(true)
 	
 	
-func Hitbox_Collide():
-	pass
+func Hitbox_Collide(body):
+	if !(body in player_list):
+		var charstate
+		charstate = body.get_node("StateMachine")
+		weight = body.weight
+		body.percentage += damage
+		knockbackVal = knockback(body.percentage, damage, weight, kb_scaling, base_kb, 1)
+		#s_angle(body) not needed if it doesnt work when implimented
+		angle_flipper(body)
+		body.knockback = knockbackVal
+		body.hitstun = getHitstun(knockbackVal/0.3)
+		get_parent().connected = true
+		body.fr()
+		charstate.state = charstate.states.HITSTUN
 	
 func update_extents():
 	hitbox.shape.extents = Vector2(width, height)
