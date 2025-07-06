@@ -52,6 +52,24 @@ func Hitbox_Collide(body):
 		body.fr()
 		charstate.state = charstate.states.HITSTUN
 	
+@export var percentage = 0
+@export var weight = 150
+@export var base_knockback = 40
+@export var ratio = 1
+
+func knockback(p,d,w,ks,bk,r):
+	percentage = p
+	damage = d
+	weight = w
+	kb_scaling = ks
+	base_kb = bk
+	ratio = r
+	return ((((((((percentage/10) +(percentage*damage/20)) * (200/ (weight + 100)) *1.4)+18)*(kb_scaling))+base_kb)*1))*.004
+	
+func angle_flipper(body):
+	var xangle
+	pass
+
 func update_extents():
 	hitbox.shape.extents = Vector2(width, height)
 	
