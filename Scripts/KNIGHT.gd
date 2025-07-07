@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 #Global Variables
 var frame = 0
+@export var id: int
 
 #Attributes
 @export var percentage = 0

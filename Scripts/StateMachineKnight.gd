@@ -1,5 +1,5 @@
 extends StateMachine #Essentially a shell/template from StateMachine
-@export var id = 1
+@onready var id = get_parent().id
 
 func _ready():
 	add_state("STAND")
@@ -25,6 +25,8 @@ func _ready():
 	add_state("FORWARD_TILT")
 	add_state("UP_TILT")
 	add_state("JAB")
+	
+	add_state("HITSTUN")
 	call_deferred("set_state", states.STAND)
 	
 
@@ -38,10 +40,12 @@ func get_transition(delta):
 	parent.move_and_slide()
 	
 	if LANDING() == true: #if the character is landing
+		#print("Landing triggered")
 		parent.fr() #reset the frames
 		return states.LANDING #return the landing state
 		
 	if FALLING() == true: #if the character is falling
+		#print("Falling triggered")
 		return states.AIR #return the air state
 		
 	if Ledge() == true:
@@ -507,6 +511,32 @@ func get_transition(delta):
 					
 		states.JAB:
 			pass
+			
+		states.HITSTUN:
+			if parent.knockback >= 3: #if knockback is large enough, you can bounce off of surfaces
+				var bounce = parent.move_and_collide(parent.velocity *delta)
+				if bounce:
+					parent.velocity = parent.velocity.bounce(bounce.normal) * .8
+					parent.hitstun = round(parent.hitstun * .8)
+			if parent.velocity.y < 0:
+				parent.velocity.y += parent.vdecay*0.5 * Engine.time_scale
+				parent.velocity.y = clamp(parent.velocity.y,parent.velocity.y,0)
+			if parent.velocity.x < 0:
+				parent.velocity.y += parent.hdecay*0.4 * Engine.time_scale
+				parent.velocity.y = clamp(parent.velocity.x,parent.velocity.x,0)
+			elif parent.velocity.x > 0:
+				parent.velocity.y += parent.hdecay*0.4 * Engine.time_scale
+				parent.velocity.y = clamp(parent.velocity.x,0,parent.velocity.x)
+				
+			if parent.frame == parent.hitstun:
+				if parent.knockback >= 24:
+					parent.fr()
+					return states.AIR
+				else:
+					parent.fr()
+					return states.AIR
+			elif parent.frame > 60*5:
+				return states.AIR
 
 func enter_state(new_state, old_state): #Once you have entered a state, play the aproporiate animation
 	match new_state:
@@ -572,6 +602,9 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.JAB:
 			parent.states.text = str("JAB")
 			#parent.sprite.play("Jab")
+		states.HITSTUN:
+			parent.states.text = str("HITSTUN")
+			parent.sprite.play("Hurt")
 			
 func exit_state(old_state, new_state):
 	pass
@@ -620,8 +653,9 @@ func AIRMOVEMENT():
 			parent.velocity.x += -parent.AIR_ACCEL/5 #subtract AIR_ACCEL to slow them down to zer0
 	
 func LANDING():
+	#print("GroundL:", parent.GroundL.is_colliding(), " GroundR:", parent.GroundR.is_colliding(), " VelY:", parent.velocity.y)
 	if state_includes([states.AIR]): #if the character is withing any of the provided states (within state_includes)
-		if(parent.GroundL.is_colliding()) and parent.velocity.y > 0: #if the characters left foot is touching the ground and its vert velocity is greater than 0
+		if(parent.GroundL.is_colliding()) and parent.velocity.y >= -5: #and parent.velocity.y > 0 #if the characters left foot is touching the ground and its vert velocity is greater than 0
 			#var collider = parent.GroundL.get_collider() #store what the foot is colliding with
 			
 			var col_pointL = parent.GroundL.get_collision_point()
@@ -636,7 +670,7 @@ func LANDING():
 			parent.fastfall = false #end the fastfall because we are now on the ground
 			return true
 			
-		elif parent.GroundR.is_colliding() and parent.velocity.y > 0: #if the characters right foot is touching the ground and its vert velocity is greater than zer0
+		elif parent.GroundR.is_colliding() and parent.velocity.y >= -5:# and parent.velocity.y > 0: #if the characters right foot is touching the ground and its vert velocity is greater than zer0
 			#var collider2 = parent.GroundR.get_collider() #store what the foot is colliding with
 			
 			var col_pointR = parent.GroundR.get_collision_point()
@@ -654,9 +688,10 @@ func LANDING():
 func FALLING():
 	if state_includes([states.STAND, states.DASH]): #if the character is withing any of the provided states (within state_includes)
 		if not parent.GroundL.is_colliding() and not parent.GroundR.is_colliding():	
+			print("Falling is true")
 			return true #if neither of the characters feet are touching the ground, it is falling(return true)
-	else:
-		false
+		print("Falling is false")
+		return false
 
 func Ledge():
 	if state_includes([states.AIR]):

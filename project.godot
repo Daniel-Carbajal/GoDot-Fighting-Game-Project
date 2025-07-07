@@ -90,6 +90,54 @@ special_1={
 "deadzone": 0.5,
 "events": []
 }
+right_2={
+"deadzone": 0.5,
+"events": []
+}
+r_right_2={
+"deadzone": 0.5,
+"events": []
+}
+left_2={
+"deadzone": 0.5,
+"events": []
+}
+r_left_2={
+"deadzone": 0.5,
+"events": []
+}
+up_2={
+"deadzone": 0.5,
+"events": []
+}
+r_up_2={
+"deadzone": 0.5,
+"events": []
+}
+down_2={
+"deadzone": 0.5,
+"events": []
+}
+r_down_2={
+"deadzone": 0.5,
+"events": []
+}
+shield_2={
+"deadzone": 0.5,
+"events": []
+}
+jump_2={
+"deadzone": 0.5,
+"events": []
+}
+attack_2={
+"deadzone": 0.5,
+"events": []
+}
+special_2={
+"deadzone": 0.5,
+"events": []
+}
 
 [layer_names]
 

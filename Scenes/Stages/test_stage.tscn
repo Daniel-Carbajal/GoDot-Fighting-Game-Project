@@ -71,7 +71,11 @@ script = ExtResource("4_tukx1")
 
 [node name="KNIGHT" parent="." instance=ExtResource("2_n3eht")]
 position = Vector2(0, -36)
-collision_layer = 1
+id = 1
+
+[node name="KNIGHT2" parent="." instance=ExtResource("2_n3eht")]
+position = Vector2(312, -36)
+id = 2
 
 [node name="Ledge_R" parent="." instance=ExtResource("3_36lh4")]
 position = Vector2(481, 230)
