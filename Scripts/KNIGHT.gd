@@ -3,6 +3,7 @@ extends CharacterBody2D
 #Global Variables
 var frame = 0
 @export var id: int
+var dir = 1 #which direction is char facing (spawn into world facing right)
 
 #Attributes
 @export var percentage = 0
@@ -64,22 +65,26 @@ var ROLL_DISTANCE = 350
 var air_dodge_speed = 500
 var UP_B_LAUNCHSPEED = 700
 
+func direction():
+	return dir
+
+#creates a hitbox with attributes given and applies those attributes in its own script through set parameters
 func create_hitbox(width, height, damage, angle, base_kb, kb_scaling, duration, type, points, angle_flipper, hitlag=1):
 	var hitbox_instance = hitbox.instantiate()
 	self.add_child(hitbox_instance)
 	#rotate the points
-	if GrabF.global_rotation_degrees == 0: #if we are facing right
+	if direction() == 1: #if we are facing right
 		hitbox_instance.set_parameters(width, height, damage, angle, base_kb, kb_scaling, duration, type, points, angle_flipper, hitlag)
 	else: #otherwise if the character is facing left
 		var flip_x_points = Vector2(-points.x, points.y)
-		hitbox_instance.set_parameters(width, height, damage, -angle+180, base_kb, kb_scaling, duration, type, flip_x_points, angle_flipper, hitlag)
+		hitbox_instance.set_parameters(width, height, damage, angle, base_kb, kb_scaling, duration, type, flip_x_points, angle_flipper, hitlag)
+	print("Creating hitbox at: ", points, " with angle: ", angle)
 	return hitbox_instance
 
 func updateframes(delta):
 	frame += 1
 
 func turn(direction):
-	var dir = 0
 	if direction: #facing right and turning left
 		dir = -1
 		GrabF.position.x = -8
@@ -113,22 +118,22 @@ func _physics_process(delta):
 	$facingB.text = str(GrabB.rotation_degrees)
 	selfState = states.text
 
-#Tilt attacks
+#Tilt attacks with attack attributes
 func down_swing_1():
 	if frame == 4:
-		create_hitbox(35,10,8,90,3,120,3,'normal',Vector2(7,18.5),0,1)
+		create_hitbox(35,10,5,90,1500,1,3,'normal',Vector2(7,18.5),0,1)
 	if frame >= 12:
 		return true
 
 func forward_swing():
 	if frame == 10:
-		create_hitbox(35,12,5,90,3,120,3,'normal',Vector2(10,8),0,1)
+		create_hitbox(35,12,5,45,500,1,3,'normal',Vector2(10,8),0,1)
 	if frame >= 21:
 		return true
 		
 func up_swing():
 	if frame == 8:
-		create_hitbox(32,10,8,90,3,120,3,'normal',Vector2(20,-32),0,1)
-		create_hitbox(18.5,25.5,8,90,3,120,3,'normal',Vector2(33.5,4),0,1)
+		create_hitbox(32,10,8,60,3,1,3,'normal',Vector2(20,-32),0,1)
+		create_hitbox(18.5,25.5,60,45,3,1,3,'normal',Vector2(33.5,4),0,1)
 	if frame >= 20:
 		return true

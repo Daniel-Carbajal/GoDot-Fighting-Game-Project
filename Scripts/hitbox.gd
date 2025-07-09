@@ -38,7 +38,7 @@ func set_parameters(w,h,d,a,b_kb,kb_s,dur,t,p,af,hit,parent=get_parent()):
 	
 	
 func Hitbox_Collide(body):
-	if !(body in player_list):
+	if !(body in player_list): 
 		var charstate
 		charstate = body.get_node("StateMachine")
 		weight = body.weight
@@ -56,7 +56,7 @@ func getHitstun(knockback):
 	return floor(knockback * 0.533)
 	
 @export var percentage = 0
-@export var weight = 150
+@export var weight = 100
 @export var base_knockback = 40
 @export var ratio = 1
 
@@ -106,10 +106,14 @@ func angle_flipper(body):
 		xangle = ((((body.global_position.angle_to_point(get_parent().global_position))*180)/PI))
 	match ang_flip:
 		0:
-			body.velocity.x = (getHorizantalVelocity(knockbackVal, -angle))
-			body.velocity.y = (getVerticalVelocity(knockbackVal, -angle))
-			body.hdecay = (getHorizantalDecay(-angle))
-			body.vdecay = (getVerticalDecay(angle))
+			var flipped_angle = angle
+			if get_parent().direction() == -1:
+				flipped_angle = 180 - angle
+
+			body.velocity.x = getHorizantalVelocity(knockbackVal, flipped_angle)
+			body.velocity.y = -getVerticalVelocity(knockbackVal, flipped_angle)
+			body.hdecay = getHorizantalDecay(flipped_angle)
+			body.vdecay = getVerticalDecay(flipped_angle)
 		1:
 			if get_parent().GrabF.global_rotation_degrees == -180:
 				xangle = -(((self.global_position.angle_to_point(body.get_parent().global_position))*180)/PI)

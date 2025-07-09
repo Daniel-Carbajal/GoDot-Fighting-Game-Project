@@ -516,17 +516,17 @@ func get_transition(delta):
 			if parent.knockback >= 3: #if knockback is large enough, you can bounce off of surfaces
 				var bounce = parent.move_and_collide(parent.velocity *delta)
 				if bounce:
-					parent.velocity = parent.velocity.bounce(bounce.normal) * .8
+					parent.velocity = parent.velocity.bounce(bounce.get_normal()) * .8
 					parent.hitstun = round(parent.hitstun * .8)
-			if parent.velocity.y < 0:
+			if parent.velocity.y < 0: #if player is moving up
 				parent.velocity.y += parent.vdecay*0.5 * Engine.time_scale
 				parent.velocity.y = clamp(parent.velocity.y,parent.velocity.y,0)
-			if parent.velocity.x < 0:
-				parent.velocity.y += parent.hdecay*0.4 * Engine.time_scale
-				parent.velocity.y = clamp(parent.velocity.x,parent.velocity.x,0)
-			elif parent.velocity.x > 0:
-				parent.velocity.y += parent.hdecay*0.4 * Engine.time_scale
-				parent.velocity.y = clamp(parent.velocity.x,0,parent.velocity.x)
+			if parent.velocity.x < 0: #if player is moving left
+				parent.velocity.x += (parent.hdecay)*0.4 * -1 * Engine.time_scale
+				parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+			elif parent.velocity.x > 0: #if player is moving right
+				parent.velocity.x -= parent.hdecay*0.4 * Engine.time_scale
+				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
 				
 			if parent.frame == parent.hitstun:
 				if parent.knockback >= 24:
@@ -688,9 +688,9 @@ func LANDING():
 func FALLING():
 	if state_includes([states.STAND, states.DASH]): #if the character is withing any of the provided states (within state_includes)
 		if not parent.GroundL.is_colliding() and not parent.GroundR.is_colliding():	
-			print("Falling is true")
+			#print("Falling is true")
 			return true #if neither of the characters feet are touching the ground, it is falling(return true)
-		print("Falling is false")
+		#print("Falling is false")
 		return false
 
 func Ledge():
