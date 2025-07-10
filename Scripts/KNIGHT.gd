@@ -133,6 +133,6 @@ func forward_swing():
 func up_swing():
 	if frame == 8:
 		#create_hitbox(32,10,8,60,3,1,3,'normal',Vector2(20,-32),0,1)
-		create_hitbox(18.5,25.5,60,45,3,1,3,'normal',Vector2(33.5,4),0,1)
+		create_hitbox(18.5,25.5,8,45,500,1,3,'normal',Vector2(33.5,4),0,1)
 	if frame >= 20:
 		return true

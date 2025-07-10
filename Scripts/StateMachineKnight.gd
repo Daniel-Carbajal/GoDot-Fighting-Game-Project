@@ -513,6 +513,7 @@ func get_transition(delta):
 			pass
 			
 		states.HITSTUN:
+			print("Velocity at start of hitstun state: " + str(parent.velocity.y))
 			if parent.knockback >= 3: #if knockback is large enough, you can bounce off of surfaces
 				var bounce = parent.move_and_collide(parent.velocity *delta)
 				if bounce:

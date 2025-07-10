@@ -113,8 +113,8 @@ func angle_flipper(body):
 				flipped_angle = 180 - angle
 
 			body.velocity.x = getHorizantalVelocity(knockbackVal, flipped_angle) #seems to be working correctly
-			print("Initial velocity of attack is: " + str(body.velocity.x))
-			body.velocity.y = getVerticalVelocity(knockbackVal, flipped_angle)
+			body.velocity.y = -1 * getVerticalVelocity(knockbackVal, flipped_angle)
+			print("Initial velocity of attack is: " + str(body.velocity.y))
 			body.hdecay = getHorizantalDecay(flipped_angle)
 			body.vdecay = getVerticalDecay(flipped_angle)
 		1:
