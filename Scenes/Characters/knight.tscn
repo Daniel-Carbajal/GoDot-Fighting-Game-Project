@@ -911,7 +911,7 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, 2.5)
+position = Vector2(0.5, 4)
 shape = SubResource("RectangleShape2D_p3nqb")
 debug_color = Color(0.999958, 0.592055, 0.538719, 0.42)
 

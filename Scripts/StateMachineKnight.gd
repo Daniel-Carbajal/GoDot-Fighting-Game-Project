@@ -525,7 +525,7 @@ func get_transition(delta):
 				parent.velocity.x += (parent.hdecay)*0.4 * -1 * Engine.time_scale
 				parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
 			elif parent.velocity.x > 0: #if player is moving right
-				parent.velocity.x -= parent.hdecay*0.4 * Engine.time_scale
+				parent.velocity.x -= parent.hdecay*0.4 * -1 * Engine.time_scale
 				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
 				
 			if parent.frame == parent.hitstun:

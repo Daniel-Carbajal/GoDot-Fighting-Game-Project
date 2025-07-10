@@ -78,7 +78,6 @@ func create_hitbox(width, height, damage, angle, base_kb, kb_scaling, duration, 
 	else: #otherwise if the character is facing left
 		var flip_x_points = Vector2(-points.x, points.y)
 		hitbox_instance.set_parameters(width, height, damage, angle, base_kb, kb_scaling, duration, type, flip_x_points, angle_flipper, hitlag)
-	print("Creating hitbox at: ", points, " with angle: ", angle)
 	return hitbox_instance
 
 func updateframes(delta):
@@ -133,7 +132,7 @@ func forward_swing():
 		
 func up_swing():
 	if frame == 8:
-		create_hitbox(32,10,8,60,3,1,3,'normal',Vector2(20,-32),0,1)
+		#create_hitbox(32,10,8,60,3,1,3,'normal',Vector2(20,-32),0,1)
 		create_hitbox(18.5,25.5,60,45,3,1,3,'normal',Vector2(33.5,4),0,1)
 	if frame >= 20:
 		return true

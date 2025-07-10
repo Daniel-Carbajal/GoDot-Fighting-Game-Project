@@ -39,6 +39,7 @@ func set_parameters(w,h,d,a,b_kb,kb_s,dur,t,p,af,hit,parent=get_parent()):
 	
 func Hitbox_Collide(body):
 	if !(body in player_list): 
+		player_list.append(body)
 		var charstate
 		charstate = body.get_node("StateMachine")
 		weight = body.weight
@@ -52,8 +53,8 @@ func Hitbox_Collide(body):
 		body.fr()
 		charstate.state = charstate.states.HITSTUN
 		
-func getHitstun(knockback):
-	return floor(knockback * 0.533)
+func getHitstun(kb):
+	return floor(kb * 0.533)
 	
 @export var percentage = 0
 @export var weight = 100
@@ -72,46 +73,48 @@ func knockback(p,d,w,ks,bk,r):
 	
 const angleConversion = PI / 180
 
-func getHorizantalDecay(angle): #rate at which the opponent will slow down after knockback
-	var decay = 0.051 + cos(angle * angleConversion) #Rate of decay is 0.051, to get horizantal rate; multiply by horizontal(cos) angle in radians
+func getHorizantalDecay(ang): #rate at which the opponent will slow down after knockback
+	var decay = 0.051 + cos(ang * angleConversion) #Rate of decay is 0.051, to get horizantal rate; multiply by horizontal(cos) angle in radians
 	decay = round(decay * 100000) / 100000
 	decay = decay * 1000
-	return decay
+	return abs(decay) #absolute value, because for decay, a negative value means we are speeding up
 
-func getVerticalDecay(angle):
-	var decay = 0.051 + sin(angle * angleConversion)
+func getVerticalDecay(ang): #rate at which character slows down
+	var decay = 0.051 + sin(ang * angleConversion) #converts angle to radians
 	decay = round(decay * 100000) / 100000
 	decay = decay * 1000
-	return abs(decay)
+	return abs(decay) #A negative decay would mean that the player is speeding up
 	
-func getHorizantalVelocity(knockback, angle): #gets horizontal knockback speed wutg total knockback and angle
+func getHorizantalVelocity(knockback, ang): #gets horizontal knockback speed wit total knockback and angle
 	var initV = knockback * 30
-	var horizontalAngle = cos(angle * angleConversion)
+	var horizontalAngle = cos(ang * angleConversion) #converts angle to radians
 	var horizontalVelocity = initV * horizontalAngle
 	horizontalVelocity = round(horizontalVelocity * 100000) / 100000
-	return horizontalVelocity
+	return horizontalVelocity 
 	
-func getVerticalVelocity(knockback, angle):
+func getVerticalVelocity(knockback, ang):
 	var initV = knockback * 30
-	var vertAngle = sin(angle * angleConversion)
+	var vertAngle = sin(ang * angleConversion) #converts angle to radians
 	var vertVelocity = initV * vertAngle
 	vertVelocity = round(vertVelocity * 100000) / 100000
 	return vertVelocity
 
 func angle_flipper(body):
 	var xangle
-	if get_parent().GrabF.global_rotation_degrees == -180: #if facing left
+	if get_parent().direction() == -1: #if facing left
 		xangle = (-(((body.global_position.angle_to_point(get_parent().global_position))*180)/PI))
 	else: #otherwise if facing right
-		xangle = ((((body.global_position.angle_to_point(get_parent().global_position))*180)/PI))
+		xangle = (((body.global_position.angle_to_point(get_parent().global_position))*180)/PI)
+		
 	match ang_flip:
 		0:
 			var flipped_angle = angle
-			if get_parent().direction() == -1:
+			if get_parent().direction() == -1: #Flips angle, if attacker is facing left
 				flipped_angle = 180 - angle
 
-			body.velocity.x = getHorizantalVelocity(knockbackVal, flipped_angle)
-			body.velocity.y = -getVerticalVelocity(knockbackVal, flipped_angle)
+			body.velocity.x = getHorizantalVelocity(knockbackVal, flipped_angle) #seems to be working correctly
+			print("Initial velocity of attack is: " + str(body.velocity.x))
+			body.velocity.y = getVerticalVelocity(knockbackVal, flipped_angle)
 			body.hdecay = getHorizantalDecay(flipped_angle)
 			body.vdecay = getVerticalDecay(flipped_angle)
 		1:
