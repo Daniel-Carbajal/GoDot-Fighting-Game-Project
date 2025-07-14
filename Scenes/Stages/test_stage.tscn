@@ -85,3 +85,17 @@ ledge_Side = "Right"
 [node name="Ledge_L" parent="." instance=ExtResource("3_36lh4")]
 position = Vector2(-482, 230)
 scale = Vector2(2.73473, 1.79891)
+
+[node name="P1" type="Label" parent="."]
+offset_left = -264.0
+offset_top = 368.0
+offset_right = -224.0
+offset_bottom = 391.0
+theme_override_font_sizes/font_size = 45
+
+[node name="P2" type="Label" parent="."]
+offset_left = 200.0
+offset_top = 368.0
+offset_right = 240.0
+offset_bottom = 391.0
+theme_override_font_sizes/font_size = 45

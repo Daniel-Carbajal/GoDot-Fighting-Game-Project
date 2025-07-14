@@ -513,21 +513,26 @@ func get_transition(delta):
 			pass
 			
 		states.HITSTUN:
-			print("Velocity at start of hitstun state: " + str(parent.velocity.y))
+			#print(" YVelocity at start of hitstun state: " + str(parent.velocity.y))
 			if parent.knockback >= 3: #if knockback is large enough, you can bounce off of surfaces
 				var bounce = parent.move_and_collide(parent.velocity *delta)
 				if bounce:
 					parent.velocity = parent.velocity.bounce(bounce.get_normal()) * .8
 					parent.hitstun = round(parent.hitstun * .8)
+					#print("bounce initiated")
+					
 			if parent.velocity.y < 0: #if player is moving up
-				parent.velocity.y += parent.vdecay*0.5 * Engine.time_scale
+				parent.velocity.y += (parent.vdecay)*0.5 * Engine.time_scale
 				parent.velocity.y = clamp(parent.velocity.y,parent.velocity.y,0)
+				
 			if parent.velocity.x < 0: #if player is moving left
 				parent.velocity.x += (parent.hdecay)*0.4 * -1 * Engine.time_scale
 				parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+				#print("x velocity: " + str(parent.velocity.x))
 			elif parent.velocity.x > 0: #if player is moving right
-				parent.velocity.x -= parent.hdecay*0.4 * -1 * Engine.time_scale
+				parent.velocity.x -= parent.hdecay*0.4 * Engine.time_scale
 				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				#print("x velocity: " + str(parent.velocity.x))
 				
 			if parent.frame == parent.hitstun:
 				if parent.knockback >= 24:
@@ -541,7 +546,7 @@ func get_transition(delta):
 
 func enter_state(new_state, old_state): #Once you have entered a state, play the aproporiate animation
 	match new_state:
-		states.STAND:
+		states.STAND: 
 			parent.sprite.play("Idle")
 			parent.states.text = str("STAND")
 		states.DASH:

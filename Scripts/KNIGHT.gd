@@ -45,6 +45,7 @@ var selfState
 @onready var GrabB = get_node('Raycasts/Ledge_Grab_B')
 @onready var states = $State
 @onready var sprite = get_node("Sprite/AnimationPlayer")
+@onready var percentLabel = get_parent().get_node("P%s" % id)
 
 #Knights main attributes
 var RUNSPEED = 400
@@ -116,23 +117,27 @@ func _physics_process(delta):
 	$facing.text = str(GrabF.rotation_degrees)
 	$facingB.text = str(GrabB.rotation_degrees)
 	selfState = states.text
+	percentLabel.text = str(percentage)
 
 #Tilt attacks with attack attributes
+#Order of create_hitbox parameters in terms of attack attributes:
+#	width of hitbox, height of hitbox, damage, angle of knockback, base knockback, knockback scaling, duration, 
+#	type of attack, hitbox spawnpoint, angle_flipper val, hitlag val   
 func down_swing_1():
 	if frame == 4:
-		create_hitbox(35,10,5,90,1500,1,3,'normal',Vector2(7,18.5),0,1)
+		create_hitbox(35,10,25,90,2000,5,3,'normal',Vector2(7,18.5),0,1)
 	if frame >= 12:
 		return true
 
 func forward_swing():
 	if frame == 10:
-		create_hitbox(35,12,5,45,500,1,3,'normal',Vector2(10,8),0,1)
+		create_hitbox(35,12,15,15,3000,2,3,'normal',Vector2(10,8),0,1)
 	if frame >= 21:
 		return true
 		
 func up_swing():
 	if frame == 8:
 		#create_hitbox(32,10,8,60,3,1,3,'normal',Vector2(20,-32),0,1)
-		create_hitbox(18.5,25.5,8,45,500,1,3,'normal',Vector2(33.5,4),0,1)
+		create_hitbox(18.5,25.5,20,45,3000,5,3,'normal',Vector2(33.5,4),0,1)
 	if frame >= 20:
 		return true

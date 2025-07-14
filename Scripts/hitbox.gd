@@ -42,9 +42,10 @@ func Hitbox_Collide(body):
 		player_list.append(body)
 		var charstate
 		charstate = body.get_node("StateMachine")
-		weight = body.weight
+		#weight = body.weight
 		body.percentage += damage
-		knockbackVal = knockback(body.percentage, damage, weight, kb_scaling, base_kb, 1)
+		knockbackVal = knockback(body.percentage, damage, body.weight, kb_scaling, base_kb, 1)
+		#print("In hitbox collide, body.percentage is: ", body.percentage)
 		#s_angle(body) not needed if it doesnt work when implimented
 		angle_flipper(body)
 		body.knockback = knockbackVal
@@ -54,33 +55,42 @@ func Hitbox_Collide(body):
 		charstate.state = charstate.states.HITSTUN
 		
 func getHitstun(kb):
-	return floor(kb * 0.533)
+	return floor(kb * 0.433)
 	
-@export var percentage = 0
-@export var weight = 100
-@export var base_knockback = 40
+#@export var weight = 100
 @export var ratio = 1
 
 func knockback(p,d,w,ks,bk,r):
-	percentage = p
-	damage = d
-	weight = w
-	kb_scaling = ks
-	base_kb = bk
-	ratio = r
-	return ((((((((percentage/10) +(percentage*damage/20)) * (200/ (weight + 100)) *1.4)+18)*(kb_scaling))+base_kb)*1))*.004
+	var percent = p
+	var damage = d
+	var weight = w
+	var kb_scaling = ks
+	var base_kb = bk
+	var ratio = r
+
+	var term1 = percent / 10
+	var term2 = (percent * damage) / 20
+	var weight_factor = 300.0 / float(weight + 100) #changing the first value in this line can help tweak scaling
+	var product = (term1 + term2) * weight_factor * 1.4
+	var scaled = (product + 18) * kb_scaling
+	var total_kb = (scaled + base_kb) * 0.005
+	
+	print("KB Debug => term1: %.2f | term2: %.2f | weight_factor: %.2f | product: %.2f | scaled: %.2f | base_kb: %.2f | final_kb: %.2f"
+		% [term1, term2, weight_factor, product, scaled, base_kb, total_kb])
+	
+	return total_kb
 	
 	
 const angleConversion = PI / 180
 
 func getHorizantalDecay(ang): #rate at which the opponent will slow down after knockback
-	var decay = 0.051 + cos(ang * angleConversion) #Rate of decay is 0.051, to get horizantal rate; multiply by horizontal(cos) angle in radians
+	var decay = 0.051 * cos(ang * angleConversion) #Rate of decay is 0.051, to get horizantal rate; multiply by horizontal(cos) angle in radians
 	decay = round(decay * 100000) / 100000
 	decay = decay * 1000
-	return abs(decay) #absolute value, because for decay, a negative value means we are speeding up
+	return decay #absolute value, because for decay, a negative value means we are speeding up
 
 func getVerticalDecay(ang): #rate at which character slows down
-	var decay = 0.051 + sin(ang * angleConversion) #converts angle to radians
+	var decay = 0.051 * sin(ang * angleConversion) #converts angle to radians
 	decay = round(decay * 100000) / 100000
 	decay = decay * 1000
 	return abs(decay) #A negative decay would mean that the player is speeding up
@@ -114,9 +124,11 @@ func angle_flipper(body):
 
 			body.velocity.x = getHorizantalVelocity(knockbackVal, flipped_angle) #seems to be working correctly
 			body.velocity.y = -1 * getVerticalVelocity(knockbackVal, flipped_angle)
-			print("Initial velocity of attack is: " + str(body.velocity.y))
+			#print("Initial velocity of attack is: " + str(body.velocity.y))
 			body.hdecay = getHorizantalDecay(flipped_angle)
+			#print("hdecay: " + str(body.hdecay))
 			body.vdecay = getVerticalDecay(flipped_angle)
+			#print("vdecay: " + str(body.vdecay))
 		1:
 			if get_parent().GrabF.global_rotation_degrees == -180:
 				xangle = -(((self.global_position.angle_to_point(body.get_parent().global_position))*180)/PI)
