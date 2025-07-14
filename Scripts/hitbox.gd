@@ -75,8 +75,8 @@ func knockback(p,d,w,ks,bk,r):
 	var scaled = (product + 18) * kb_scaling
 	var total_kb = (scaled + base_kb) * 0.005
 	
-	print("KB Debug => term1: %.2f | term2: %.2f | weight_factor: %.2f | product: %.2f | scaled: %.2f | base_kb: %.2f | final_kb: %.2f"
-		% [term1, term2, weight_factor, product, scaled, base_kb, total_kb])
+	#print("KB Debug => term1: %.2f | term2: %.2f | weight_factor: %.2f | product: %.2f | scaled: %.2f | base_kb: %.2f | final_kb: %.2f"
+		#% [term1, term2, weight_factor, product, scaled, base_kb, total_kb])
 	
 	return total_kb
 	
