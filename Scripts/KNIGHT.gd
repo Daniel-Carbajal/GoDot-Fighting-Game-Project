@@ -131,7 +131,7 @@ func down_swing_1():
 
 func forward_swing():
 	if frame == 10:
-		create_hitbox(35,12,15,15,3000,2,3,'normal',Vector2(10,8),0,1)
+		create_hitbox(35,12,15,15,3000,3.5,3,'normal',Vector2(10,8),0,1)
 	if frame >= 21:
 		return true
 		
@@ -141,3 +141,58 @@ func up_swing():
 		create_hitbox(18.5,25.5,20,45,3000,5,3,'normal',Vector2(33.5,4),0,1)
 	if frame >= 20:
 		return true
+
+#Air Attacks
+func NAIR():
+	if frame == 1:
+		create_hitbox()
+	if frame > 1:
+		if connected == true:
+			if frame == 36:
+				connected = false
+				return true
+		else:
+			if frame == 5:
+				#create_hitbox()
+				if frame == 36:
+					return true
+				
+func UAIR():
+	if frame == 2:
+		create_hitbox()
+	if frame == 6:
+		create_hitbox()
+	if frame == 15:
+		return true
+		
+func BAIR():
+	if frame == 2:
+		create_hitbox()
+	if frame > 1:
+		if connected == true:
+			if frame == 10:
+				connected = false
+				return true
+		else:
+			if frame == 7:
+				create_hitbox()
+			if frame == 10:
+				return true
+				
+func FAIR():
+	if frame == 2:
+		create_hitbox()
+	if frame == 11:
+		create_hitbox()
+	if frame == 18:
+		return true
+		
+func DAIR():
+	var framesList = [2,3,5,7,9,11]
+	if frame in framesList:
+		create_hitbox()
+	if frame == 14:
+		create_hitbox()
+	if frame == 17:
+		return true
+		

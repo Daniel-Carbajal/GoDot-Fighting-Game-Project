@@ -26,6 +26,13 @@ func _ready():
 	add_state("UP_TILT")
 	add_state("JAB")
 	
+	add_state("AIR_ATTACK")
+	add_state("NAIR")
+	add_state("UAIR")
+	add_state("BAIR")
+	add_state("FAIR")
+	add_state("DAIR")
+	
 	add_state("HITSTUN")
 	call_deferred("set_state", states.STAND)
 	
