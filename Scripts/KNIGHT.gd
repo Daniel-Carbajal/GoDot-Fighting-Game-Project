@@ -145,7 +145,7 @@ func up_swing():
 #Air Attacks
 func NAIR():
 	if frame == 1:
-		create_hitbox()
+		create_hitbox(35,12,15,361,0,5,3,'normal',Vector2(10,8),0,.4)
 	if frame > 1:
 		if connected == true:
 			if frame == 36:
@@ -153,21 +153,21 @@ func NAIR():
 				return true
 		else:
 			if frame == 5:
-				#create_hitbox()
+				create_hitbox(35,12,11,361,0,5,10,'normal',Vector2(10,8),0,.1)
 				if frame == 36:
 					return true
 				
 func UAIR():
 	if frame == 2:
-		create_hitbox()
+		create_hitbox(32.5, 20, 5, 90, 2500, 0, 2, 'normal', Vector2(0,-32), 0, 1)
 	if frame == 6:
-		create_hitbox()
+		create_hitbox(32.5, 20, 15, 90, 500, 7, 3, 'normal', Vector2(0,-32), 0, 1)
 	if frame == 15:
 		return true
 		
 func BAIR():
 	if frame == 2:
-		create_hitbox()
+		create_hitbox(32.5,40, 15, 45, 100, 15, 5, 'normal', Vector2(-32, 0), 6, 1)
 	if frame > 1:
 		if connected == true:
 			if frame == 10:
@@ -175,24 +175,24 @@ func BAIR():
 				return true
 		else:
 			if frame == 7:
-				create_hitbox()
+				create_hitbox(32.5, 40, 5, 45, 300, 18, 10, 'normal', Vector2(-32, 0), 6, 1)
 			if frame == 10:
 				return true
 				
 func FAIR():
 	if frame == 2:
-		create_hitbox()
+		create_hitbox(35,12,5,76,100,15,3,'normal',Vector2(10,8),0,1)
 	if frame == 11:
-		create_hitbox()
+		create_hitbox(35,12,5,76,100,15,3,'normal',Vector2(10,8),0,1)
 	if frame == 18:
 		return true
 		
 func DAIR():
 	var framesList = [2,3,5,7,9,11]
 	if frame in framesList:
-		create_hitbox()
+		create_hitbox(40, 30, 5, 290, 140, 0, 2, 'normal', Vector2(0,45), 0, 1)
 	if frame == 14:
-		create_hitbox()
+		create_hitbox(40, 30, 10, 45, 12, 120, 2, 'normal', Vector2(0,45), 0, 1)
 	if frame == 17:
 		return true
 		

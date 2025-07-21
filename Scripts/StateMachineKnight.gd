@@ -66,6 +66,28 @@ func get_transition(delta):
 		return states.GROUND_ATTACK
 		
 	#ATTACK INPUT
+	if Input.is_action_just_pressed("attack_%s" % id) && AIREAL() == true:
+		if Input.is_action_pressed("up_%s" % id):
+			parent.fr()
+			return states.UAIR
+		if Input.is_action_pressed("down_s%" % id):
+			parent.fr()
+			return states.DAIR
+		match parent.direction():
+			1:
+				if Input.is_action_pressed("left_%s" % id):
+					parent.fr()
+					return states.BAIR
+				if Input.is_action_pressed("right_s%" % id):
+					parent.fr()
+					return states.FAIR
+			-1:
+				if Input.is_action_pressed("left_%s" % id):
+					parent.fr()
+					return states.FAIR
+				if Input.is_action_pressed("right_s%" % id):
+					parent.fr()
+					return states.BAIR
 		
 	match state: #like case or pattern matching
 		states.STAND:
@@ -631,7 +653,7 @@ func get_transition(delta):
 				parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
 				#print("x velocity: " + str(parent.velocity.x))
 				
-			if parent.frame == parent.hitstun:
+			if parent.frame >= parent.hitstun:
 				if parent.knockback >= 24:
 					parent.fr()
 					return states.AIR
@@ -771,7 +793,7 @@ func AIRMOVEMENT():
 	
 func LANDING():
 	#print("GroundL:", parent.GroundL.is_colliding(), " GroundR:", parent.GroundR.is_colliding(), " VelY:", parent.velocity.y)
-	if state_includes([states.AIR]): #if the character is withing any of the provided states (within state_includes)
+	if state_includes([states.AIR,states.NAIR,states.DAIR,states.FAIR,states.BAIR,states.UAIR]): #if the character is withing any of the provided states (within state_includes)
 		if(parent.GroundL.is_colliding()) and parent.velocity.y >= -5: #and parent.velocity.y > 0 #if the characters left foot is touching the ground and its vert velocity is greater than 0
 			#var collider = parent.GroundL.get_collider() #store what the foot is colliding with
 			
