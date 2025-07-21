@@ -70,7 +70,7 @@ func get_transition(delta):
 		if Input.is_action_pressed("up_%s" % id):
 			parent.fr()
 			return states.UAIR
-		if Input.is_action_pressed("down_s%" % id):
+		if Input.is_action_pressed("down_%s" % id):
 			parent.fr()
 			return states.DAIR
 		match parent.direction():
@@ -78,16 +78,18 @@ func get_transition(delta):
 				if Input.is_action_pressed("left_%s" % id):
 					parent.fr()
 					return states.BAIR
-				if Input.is_action_pressed("right_s%" % id):
+				if Input.is_action_pressed("right_%s" % id):
 					parent.fr()
 					return states.FAIR
 			-1:
 				if Input.is_action_pressed("left_%s" % id):
 					parent.fr()
 					return states.FAIR
-				if Input.is_action_pressed("right_s%" % id):
+				if Input.is_action_pressed("right_%s" % id):
 					parent.fr()
 					return states.BAIR
+		parent.fr()
+		return states.NAIR
 		
 	match state: #like case or pattern matching
 		states.STAND:
@@ -469,7 +471,7 @@ func get_transition(delta):
 				return states.UAIR
 			if Input.is_action_pressed("down_%s" % id):
 				parent.fr()
-				return states.DAIR	
+				return states.DAIR
 				
 			match parent.direction():
 				1: #if facing right in the air
@@ -695,7 +697,7 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 			parent.sprite.play("Jump")
 			parent.states.text = str("AIR")
 		states.LANDING:
-			#parent.play_animation("Jump")
+			#parent.play_animation("Crouch")
 			parent.states.text = str("LANDING")
 			
 		states.LEDGE_CATCH:
@@ -718,12 +720,15 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 			parent.states.text = str("AIR_ATTACK")
 		states.NAIR:
 			parent.states.text = str("NAIR")
+			parent.sprite.play("Attack_One")
 		states.UAIR:
 			parent.states.text = str("UAIR")
+			parent.sprite.play("Attack_Three")
 		states.DAIR:
 			parent.states.text = str("DAIR")
 		states.FAIR:
 			parent.states.text = str("FAIR")
+			parent.sprite.play("Attack_One")
 		states.BAIR:
 			parent.states.text = str("BAIR")
 			

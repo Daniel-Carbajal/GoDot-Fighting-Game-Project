@@ -1,4 +1,4 @@
-[gd_scene load_steps=100 format=3 uid="uid://b1oyr85vu7svg"]
+[gd_scene load_steps=99 format=3 uid="uid://b1oyr85vu7svg"]
 
 [ext_resource type="Texture2D" uid="uid://cpscedp7xj6u1" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png" id="1_4j1js"]
 [ext_resource type="Script" path="res://Scripts/KNIGHT.gd" id="1_k2c4n"]
@@ -889,9 +889,6 @@ multichannel_signed_distance_field = true
 [sub_resource type="FontVariation" id="FontVariation_20fig"]
 base_font = SubResource("SystemFont_67jrl")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ps72s"]
-size = Vector2(40, 30)
-
 [node name="KNIGHT" type="CharacterBody2D"]
 position = Vector2(-1, 0)
 scale = Vector2(2, 2)
@@ -977,7 +974,3 @@ offset_top = -56.0
 offset_right = -40.0
 offset_bottom = -33.0
 text = "right"
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, 45)
-shape = SubResource("RectangleShape2D_ps72s")

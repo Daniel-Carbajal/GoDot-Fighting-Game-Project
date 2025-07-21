@@ -167,7 +167,7 @@ func UAIR():
 		
 func BAIR():
 	if frame == 2:
-		create_hitbox(32.5,40, 15, 45, 100, 15, 5, 'normal', Vector2(-32, 0), 6, 1)
+		create_hitbox(16.25,20, 15, 45, 100, 15, 5, 'normal', Vector2(-32, 0), 6, 1)
 	if frame > 1:
 		if connected == true:
 			if frame == 10:
@@ -175,7 +175,7 @@ func BAIR():
 				return true
 		else:
 			if frame == 7:
-				create_hitbox(32.5, 40, 5, 45, 300, 18, 10, 'normal', Vector2(-32, 0), 6, 1)
+				create_hitbox(16.25, 20, 5, 45, 300, 18, 10, 'normal', Vector2(-32, 0), 6, 1)
 			if frame == 10:
 				return true
 				
