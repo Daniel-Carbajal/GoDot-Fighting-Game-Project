@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1753121767
+::res://::1753307845
 icon.svg::CompressedTexture2D::6815213379467420533::1745621490::1745621499::1::::<><>::
 ::res://addons/::1745687251
 ::res://addons/godot-git-plugin/::1745687251
@@ -8,7 +8,7 @@ plugin.cfg::TextFile::-1::1745687251::0::1::::<><>::
 THIRDPARTY.md::TextFile::-1::1745687251::0::1::::<><>::
 ::res://addons/godot-git-plugin/linux/::1745687251
 ::res://addons/godot-git-plugin/macos/::1745687251
-::res://addons/godot-git-plugin/win64/::1753121760
+::res://addons/godot-git-plugin/win64/::1753307831
 ::res://Assets/::1747791593
 ::res://Assets/Character Sprites/::1745632516
 ::res://Assets/Character Sprites/downloads/::1745632517
@@ -42,20 +42,20 @@ WALK.png::CompressedTexture2D::8316020188522329299::1745632517::1745633700::1:::
 layer_1.png::CompressedTexture2D::8104924462346618404::1747791588::1747791591::1::::<><>::
 layer_2.png::CompressedTexture2D::4300751065824435095::1747791588::1747791592::1::::<><>::
 layer_3.png::CompressedTexture2D::1463352291437252420::1747791588::1747791593::1::::<><>::
-::res://Scenes/::1752698623
-hitbox.tscn::PackedScene::3165748322738856544::1752698623::0::1::::<><>::res://Scripts/hitbox.gd
-::res://Scenes/Characters/::1752698623
-knight.tscn::PackedScene::4241721253758395384::1752698623::0::1::::<><>::uid://cpscedp7xj6u1::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png<>res://Scripts/KNIGHT.gd<>uid://bldroaxfl4c4g::::res://Scenes/hitbox.tscn<>uid://1vmnsad5umue::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 3.png<>res://Scripts/StateMachineKnight.gd<>uid://552divmvmdig::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 2.png<>uid://cg4jperjywndn::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/DEFEND.png<>uid://be5lsj2h7ao7r::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/JUMP.png<>uid://dnbmm80x205sb::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/DEATH.png<>uid://bb2c3ycynjven::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/HURT.png<>uid://dpqtv8cm4b88t::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/RUN.png<>uid://dqqlvw8b4rj44::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/WALK.png<>uid://ddr2kq3tdgkht::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/IDLE.png
-::res://Scenes/Stages/::1752956292
+::res://Scenes/::1753126005
+hitbox.tscn::PackedScene::3165748322738856544::1753126005::0::1::::<><>::res://Scripts/hitbox.gd
+::res://Scenes/Characters/::1753126005
+knight.tscn::PackedScene::4241721253758395384::1753126005::0::1::::<><>::uid://cpscedp7xj6u1::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png<>res://Scripts/KNIGHT.gd<>uid://bldroaxfl4c4g::::res://Scenes/hitbox.tscn<>uid://1vmnsad5umue::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 3.png<>res://Scripts/StateMachineKnight.gd<>uid://552divmvmdig::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 2.png<>uid://cg4jperjywndn::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/DEFEND.png<>uid://be5lsj2h7ao7r::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/JUMP.png<>uid://dnbmm80x205sb::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/DEATH.png<>uid://bb2c3ycynjven::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/HURT.png<>uid://dpqtv8cm4b88t::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/RUN.png<>uid://dqqlvw8b4rj44::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/WALK.png<>uid://ddr2kq3tdgkht::::res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/IDLE.png
+::res://Scenes/Stages/::1753126004
 1.png::CompressedTexture2D::1740932800469343::1745629364::1745629371::1::::<><>::
-test_stage.tscn::PackedScene::1883907835396520074::1752956292::0::1::::<><>::uid://3w45al3l6f::::res://Scenes/Stages/1.png<>uid://dnqc6lsqp0x5u::::res://Assets/Stage Art/layer_1.png<>uid://b2jk0hobe4bch::::res://Assets/Stage Art/layer_2.png<>uid://b1oyr85vu7svg::::res://Scenes/Characters/knight.tscn<>uid://coy37paahj248::::res://Scenes/Stages/stage_assets/ledge.tscn<>res://Scripts/stage_cam.gd
+test_stage.tscn::PackedScene::1883907835396520074::1753126004::0::1::::<><>::uid://3w45al3l6f::::res://Scenes/Stages/1.png<>uid://dnqc6lsqp0x5u::::res://Assets/Stage Art/layer_1.png<>uid://b2jk0hobe4bch::::res://Assets/Stage Art/layer_2.png<>uid://b1oyr85vu7svg::::res://Scenes/Characters/knight.tscn<>uid://coy37paahj248::::res://Scenes/Stages/stage_assets/ledge.tscn<>res://Scripts/stage_cam.gd
 ::res://Scenes/Stages/London/::1745627955
-::res://Scenes/Stages/stage_assets/::1752698623
-ledge.tscn::PackedScene::5806788253478500255::1752698623::0::1::::<><>::res://Scripts/ledge.gd
-::res://Scripts/::1752955955
+::res://Scenes/Stages/stage_assets/::1753126005
+ledge.tscn::PackedScene::5806788253478500255::1753126005::0::1::::<><>::res://Scripts/ledge.gd
+::res://Scripts/::1753125942
 hitbox.gd::GDScript::-1::1752531175::0::1::::<>Area2D<>::
-KNIGHT.gd::GDScript::-1::1752560072::0::1::::<>CharacterBody2D<>::
+KNIGHT.gd::GDScript::-1::1753125942::0::1::::<>CharacterBody2D<>::
 ledge.gd::GDScript::-1::1746578746::0::1::::<>Area2D<>::
 stage_cam.gd::GDScript::-1::1747793750::0::1::::<>Camera2D<>::
 StateMachine.gd::GDScript::-1::1751921050::0::1::::StateMachine<>Node<>::
-StateMachineKnight.gd::GDScript::-1::1752955955::0::1::::<>StateMachine<>::
+StateMachineKnight.gd::GDScript::-1::1753125942::0::1::::<>StateMachine<>::

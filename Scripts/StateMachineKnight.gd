@@ -91,6 +91,12 @@ func get_transition(delta):
 		parent.fr()
 		return states.NAIR
 		
+	#L_cancel
+	if Input.is_action_just_pressed("shield_%s" % id) && AIREAL() && parent.cooldown == 0:
+		parent.l_cancel = 11
+		parent.cooldown = 40 #can only l_cancel every 40 frames (or wtv this =)
+		print("L_cancel is true")
+		
 	match state: #like case or pattern matching
 		states.STAND:
 			parent.reset_Jumps()
@@ -275,9 +281,10 @@ func get_transition(delta):
 					parent.velocity.x = parent.MAXAIRSPEED
 			
 		states.LANDING:
+			if parent.frame == 1:
+				if parent.l_cancel > 0: #if you l_cancel within a certain # of frames from landing
+					parent.lag_frames = floor(parent.lag_frames / 2) #cut lag frames in half
 			if parent.frame <= parent.landing_frames + parent.lag_frames: #Checking if we are still landing
-				if parent.frame == 1: #If we are still landing and its on the first frame of landing, nothing happens
-					pass
 				if parent.velocity.x > 0: #If knights is moving to the right
 					parent.velocity.x = parent.velocity.x - parent.TRACTION/2 #Than the knight will slow down
 					parent.velocity.x = clampf(parent.velocity.x, 0 ,parent.velocity.x) #The knight is only able to slow down to a speed of zero(otherwise it would be moving to the left)
@@ -500,6 +507,12 @@ func get_transition(delta):
 				parent.lag_frames = 0
 				parent.fr()
 				return states.AIR
+			elif parent.frame < 5:
+				parent.lag_frames = 0
+			elif parent.frame > 15:
+				parent.lag_frames = 0
+			else: #otherwise if the attack is not finished
+				parent.lag_frames = 7 
 		
 		states.UAIR:
 			AIRMOVEMENT()
@@ -510,6 +523,8 @@ func get_transition(delta):
 				parent.lag_frames = 0
 				parent.fr()
 				return states.AIR
+			else: #otherwise if the attack is not finished
+				parent.lag_frames = 13
 			
 		states.DAIR:
 			AIRMOVEMENT()
@@ -520,6 +535,8 @@ func get_transition(delta):
 				parent.lag_frames = 0
 				parent.fr()
 				return states.AIR
+			else: #otherwise if the attack is not finished
+				parent.lag_frames = 18
 			
 		states.BAIR:
 			AIRMOVEMENT()
@@ -530,6 +547,8 @@ func get_transition(delta):
 				parent.lag_frames = 0
 				parent.fr()
 				return states.AIR
+			else: #otherwise if the attack is not finished
+				parent.lag_frames = 7 
 					
 		states.FAIR:
 			AIRMOVEMENT()
@@ -543,7 +562,6 @@ func get_transition(delta):
 				elif Input.is_action_pressed("right_%s" % id):
 					parent.velocity.x = parent.MAXAIRSPEED
 				return states.AIR
-				
 			if parent.frame == 0:
 				print('FAIR')
 				parent.FAIR()
@@ -551,6 +569,8 @@ func get_transition(delta):
 				parent.lag_frames = 30
 				parent.fr()
 				return states.FAIR
+			else: #otherwise if the attack is not finished
+				parent.lag_frames = 18 
 		
 		states.GROUND_ATTACK:
 			if Input.is_action_pressed("up_%s" % id):
@@ -912,7 +932,7 @@ func TILT():
 		return true
 
 func AIREAL():
-	if state_includes([states.AIR, states.DAIR, states.NAIR]):
+	if state_includes([states.AIR, states.DAIR, states.NAIR, states.FAIR, states.BAIR, states.UAIR]):
 		if !(parent.GroundL.is_colliding() and parent.GroundR.is_colliding()):
 			return true
 		else:

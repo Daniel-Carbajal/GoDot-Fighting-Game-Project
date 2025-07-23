@@ -10,6 +10,10 @@ var dir = 1 #which direction is char facing (spawn into world facing right)
 @export var stocks = 0
 @export var weight = 150
 
+#Buffers
+var l_cancel = 0
+var cooldown = 0
+
 #Knockback
 var hdecay
 var vdecay
@@ -83,6 +87,10 @@ func create_hitbox(width, height, damage, angle, base_kb, kb_scaling, duration, 
 
 func updateframes(delta):
 	frame += 1
+	l_cancel -= floor(delta * 60)
+	clamp(l_cancel, 0, l_cancel) 
+	cooldown -= floor(delta * 60)
+	cooldown = clamp(cooldown, 0, cooldown) #cooldown can NOT be less than 0
 
 func turn(direction):
 	if direction: #facing right and turning left
