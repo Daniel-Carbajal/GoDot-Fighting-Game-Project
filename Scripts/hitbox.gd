@@ -47,16 +47,27 @@ func Hitbox_Collide(body):
 		knockbackVal = knockback(body.percentage, damage, body.weight, kb_scaling, base_kb, 1)
 		#print("In hitbox collide, body.percentage is: ", body.percentage)
 		#s_angle(body) not needed if it doesnt work when implimented
-		angle_flipper(body)
+		charstate.state = charstate.states.HIT_FREEZE
+		charstate.hitfreeze(hitlag(damage, hitlag_modifier), angle_flipper2(Vector2(body.velocity.x,body.velocity.y), body.global_position))
+		
 		body.knockback = knockbackVal
 		body.hitstun = getHitstun(knockbackVal/0.3)
 		get_parent().connected = true
 		body.fr()
-		charstate.state = charstate.states.HITSTUN
+		
+		Globals.hitstun(hitlag(damage, hitlag_modifier),hitlag(damage,hitlag_modifier)/60)
+		get_parent().hit_pause_dur = duration - framez
+		get_parent().temp_pos = get_parent().position
+		get_parent().temp_vel = get_parent().velocity
 		
 func getHitstun(kb):
 	return floor(kb * 0.433)
 	
+func hitlag(d, hit):
+	damage = d
+	hitlag_modifier = hit
+	return floor((((floor(d) * 0.65) + 6) * hit))
+
 #@export var weight = 100
 @export var ratio = 1
 
@@ -108,6 +119,81 @@ func getVerticalVelocity(knockback, ang):
 	var vertVelocity = initV * vertAngle
 	vertVelocity = round(vertVelocity * 100000) / 100000
 	return vertVelocity
+
+func angle_flipper2(body_vel :Vector2, body_position :Vector2, hdecay = 0, vdecay = 0):
+	var xangle
+	if get_parent().direction() == -1: #if facing left
+		xangle = (-(((body_position.angle_to_point(get_parent().global_position))*180)/PI))
+	else: #otherwise if facing right
+		xangle = (((body_position.angle_to_point(get_parent().global_position))*180)/PI)
+		
+	match ang_flip:
+		0:
+			var flipped_angle = angle
+			if get_parent().direction() == -1: #Flips angle, if attacker is facing left
+				flipped_angle = 180 - angle
+
+			body_vel.x = getHorizantalVelocity(knockbackVal, flipped_angle) #seems to be working correctly
+			body_vel.y = -1 * getVerticalVelocity(knockbackVal, flipped_angle)
+			#print("Initial velocity of attack is: " + str(body.velocity.y))
+			hdecay = getHorizantalDecay(flipped_angle)
+			#print("hdecay: " + str(body.hdecay))
+			vdecay = getVerticalDecay(flipped_angle)
+			#print("vdecay: " + str(body.vdecay))
+			return ([body_vel.x,body_vel.y,hdecay,vdecay])
+		1:
+			if get_parent().GrabF.global_rotation_degrees == -180:
+				xangle = -(((self.global_position.angle_to_point(body_position))*180)/PI)
+			else:
+				xangle = (((self.global_position.angle_to_point(body_position))*180)/PI)
+			body_vel.x = ((getHorizantalVelocity(knockbackVal, xangle+180)))
+			body_vel.y = ((getVerticalVelocity(knockbackVal, -xangle)))
+			hdecay = (getHorizantalDecay(xangle+180))
+			vdecay = (getVerticalDecay(xangle))
+		2:
+			if get_parent().GrabF.global_rotation_degrees == -180:
+				xangle = -(((body_position.angle_to_point(self.global_position))*180)/PI)
+			else:
+				xangle = (((body_position.angle_to_point(self.global_position))*180)/PI)
+			body_vel.x = ((getHorizantalVelocity(knockbackVal, -xangle+100)))
+			body_vel.y = ((getVerticalVelocity(knockbackVal, -xangle)))
+			hdecay = (getHorizantalDecay(xangle+180))
+			vdecay = (getVerticalDecay(xangle))
+		3:
+			if get_parent().GrabF.global_rotation_degrees == -180:
+				xangle = (-(((body_position.angle_to_point(self.global_position))*180)/PI))+180
+			else:
+				xangle = (((body_position.angle_to_point(self.global_position))*180)/PI)
+			body_vel.x = ((getHorizantalVelocity(knockbackVal, xangle)))
+			body_vel.y = ((getVerticalVelocity(knockbackVal, -angle)))
+			hdecay = (getHorizantalDecay(xangle))
+			vdecay = (getVerticalDecay(angle))
+		4:
+			if get_parent().GrabF.global_rotation_degrees == -180:
+				xangle = -(((body_position.angle_to_point(self.global_position))*180)/PI)+180
+			else:
+				xangle = (((body_position.angle_to_point(self.global_position))*180)/PI)
+			body_vel.x = ((getHorizantalVelocity(knockbackVal, -xangle*180)))
+			body_vel.y = ((getVerticalVelocity(knockbackVal, -angle)))
+			hdecay = (getHorizantalDecay(angle))
+			vdecay = (getVerticalDecay(angle))
+		5:
+			body_vel.x = ((getHorizantalVelocity(knockbackVal, angle+180)))
+			body_vel.y = ((getVerticalVelocity(knockbackVal, -angle)))
+			hdecay = (getHorizantalDecay(angle+180))
+			vdecay = (getVerticalDecay(angle))
+		6:
+			body_vel.x = ((getHorizantalVelocity(knockbackVal, xangle)))
+			body_vel.y = ((getVerticalVelocity(knockbackVal, -angle)))
+			hdecay = (getHorizantalDecay(xangle))
+			vdecay = (getVerticalDecay(angle))
+		7:
+			body_vel.x = ((getHorizantalVelocity(knockbackVal, -xangle+180)))
+			body_vel.y = ((getVerticalVelocity(knockbackVal, -angle)))
+			hdecay = (getHorizantalDecay(angle))
+			vdecay = (getVerticalDecay(angle))
+			
+			
 
 func angle_flipper(body):
 	var xangle
@@ -181,6 +267,8 @@ func angle_flipper(body):
 			body.hdecay = (getHorizantalDecay(angle))
 			body.vdecay = (getVerticalDecay(angle))
 			
+			
+
 
 func update_extents():
 	hitbox.shape.extents = Vector2(width, height)
@@ -192,9 +280,8 @@ func _ready():
 	
 func _physics_process(delta):
 	if framez<duration:
-		framez+=1
+		framez += floor(delta*60)
 	elif framez==duration:
-		Engine.time_scale = 1
 		queue_free() #wait for current code to execute before deletion 
 		return
 	if get_parent().selfState != parentState: #if the characters attack ends suddenly, get rid of the hitbox (character gets attack mid of their own attack)

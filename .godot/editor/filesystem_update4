@@ -4,3 +4,5 @@ res://Scenes/Stages/stage_assets/ledge.tscn
 res://Scenes/hitbox.tscn
 res://Scripts/KNIGHT.gd
 res://Scripts/StateMachineKnight.gd
+res://Scripts/hitbox.gd
+res://Scripts/Globals.gd

@@ -33,6 +33,7 @@ func _ready():
 	add_state("FAIR")
 	add_state("DAIR")
 	
+	add_state("HIT_FREEZE")
 	add_state("HITSTUN")
 	call_deferred("set_state", states.STAND)
 
@@ -658,6 +659,16 @@ func get_transition(delta):
 		states.JAB:
 			pass
 			
+		states.HIT_FREEZE:
+			if parent.freezeframes == 0:
+				parent.fr()
+				parent.velocity.x = kbx
+				parent.velocity.y = kby
+				parent.hdecay = hd
+				parent.vdecay = vd
+				return states.HITSTUN
+			parent.position = pos
+		
 		states.HITSTUN:
 			#print(" YVelocity at start of hitstun state: " + str(parent.velocity.y))
 			if parent.knockback >= 3: #if knockback is large enough, you can bounce off of surfaces
@@ -771,6 +782,9 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.JAB:
 			parent.states.text = str("JAB")
 			#parent.sprite.play("Jab")
+		states.HIT_FREEZE:
+			parent.states.text = str("HITFREEZE")
+			parent.sprite.play("Hurt")
 		states.HITSTUN:
 			parent.states.text = str("HITSTUN")
 			parent.sprite.play("Hurt")
@@ -944,3 +958,17 @@ func AIREAL():
 			return false
 	else:
 		return false
+
+var kbx
+var kby
+var hd
+var vd
+var pos
+
+func hitfreeze(duration, knockback):
+	pos = parent.get_position()
+	parent.freezeframes = duration
+	kbx = knockback[0]
+	kby = knockback[1]
+	hd = knockback[2]
+	vd = knockback[3]

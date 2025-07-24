@@ -94,7 +94,7 @@ func create_hitbox(width, height, damage, angle, base_kb, kb_scaling, duration, 
 	return hitbox_instance
 
 func updateframes(delta):
-	frame += 1
+	frame += floor(delta * 60)
 	l_cancel = max(0, l_cancel - floor(delta * 60))
 	cooldown = max(0, cooldown - floor(delta * 60))
 	
