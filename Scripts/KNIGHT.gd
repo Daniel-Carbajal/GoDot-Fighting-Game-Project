@@ -9,6 +9,7 @@ var dir = 1 #which direction is char facing (spawn into world facing right)
 @export var percentage = 0
 @export var stocks = 0
 @export var weight = 150
+var freezeframes = 0
 
 #Buffers
 var l_cancel = 0
@@ -41,6 +42,13 @@ var catch = false
 #Hitboxes
 @export var hitbox: PackedScene
 var selfState
+
+#Temp Vars
+var hit_pause = 0
+var hit_pause_dur = 0
+var temp_pos = Vector2(0,0)
+var temp_vel = Vector2(0,0)
+
 
 #OnReady Variables
 @onready var GroundR = get_node('Raycasts/GroundR')
@@ -87,10 +95,12 @@ func create_hitbox(width, height, damage, angle, base_kb, kb_scaling, duration, 
 
 func updateframes(delta):
 	frame += 1
-	l_cancel -= floor(delta * 60)
-	clamp(l_cancel, 0, l_cancel) 
-	cooldown -= floor(delta * 60)
-	cooldown = clamp(cooldown, 0, cooldown) #cooldown can NOT be less than 0
+	l_cancel = max(0, l_cancel - floor(delta * 60))
+	cooldown = max(0, cooldown - floor(delta * 60))
+	
+	if freezeframes > 0:
+		freezeframes -= floor(delta * 60)
+	freezeframes = clamp(freezeframes,0,freezeframes)
 
 func turn(direction):
 	if direction: #facing right and turning left
@@ -126,6 +136,18 @@ func _physics_process(delta):
 	$facingB.text = str(GrabB.rotation_degrees)
 	selfState = states.text
 	percentLabel.text = str(percentage)
+
+func hit_p(delta):
+	if hit_pause < hit_pause_dur:
+		self.position = temp_pos
+		hit_pause += floor((1 * delta) *60)
+	else:
+		if temp_vel != Vector2(0,0):
+			self.velocity.x = temp_vel.x
+			self.velocity.y = temp_vel.y
+			temp_vel = Vector2(0,0)
+		hit_pause_dur = 0
+		hit_pause = 0
 
 #Tilt attacks with attack attributes
 #Order of create_hitbox parameters in terms of attack attributes:

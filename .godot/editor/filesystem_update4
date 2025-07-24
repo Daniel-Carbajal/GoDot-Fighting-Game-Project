@@ -1,6 +1,6 @@
 res://Scenes/Stages/test_stage.tscn
-res://Scripts/KNIGHT.gd
-res://Scripts/StateMachineKnight.gd
 res://Scenes/Characters/knight.tscn
 res://Scenes/Stages/stage_assets/ledge.tscn
 res://Scenes/hitbox.tscn
+res://Scripts/KNIGHT.gd
+res://Scripts/StateMachineKnight.gd

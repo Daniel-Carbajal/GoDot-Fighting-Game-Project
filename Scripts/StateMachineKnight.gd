@@ -35,16 +35,17 @@ func _ready():
 	
 	add_state("HITSTUN")
 	call_deferred("set_state", states.STAND)
-	
 
 func state_logic(delta):
 	parent.updateframes(delta)
 	parent._physics_process(delta)
 	if parent.regrab > 0:
 		parent.regrab -= 1
+	parent.hit_p(delta)
 
 func get_transition(delta):
 	parent.move_and_slide()
+	#print("AIREAL is: " + str(AIREAL()))
 	
 	if LANDING() == true: #if the character is landing
 		#print("Landing triggered")
@@ -91,7 +92,8 @@ func get_transition(delta):
 		parent.fr()
 		return states.NAIR
 		
-	#L_cancel
+	#L_cancel	
+	#print("Trying to L-cancel | cooldown:", parent.cooldown, " | AIREAL:", AIREAL(), " | shield just pressed:", Input.is_action_just_pressed("shield_%s" % id))
 	if Input.is_action_just_pressed("shield_%s" % id) && AIREAL() && parent.cooldown == 0:
 		parent.l_cancel = 11
 		parent.cooldown = 40 #can only l_cancel every 40 frames (or wtv this =)
@@ -282,6 +284,7 @@ func get_transition(delta):
 			
 		states.LANDING:
 			if parent.frame == 1:
+				#print("Landing Frame 1, l_cancel =", parent.l_cancel)
 				if parent.l_cancel > 0: #if you l_cancel within a certain # of frames from landing
 					parent.lag_frames = floor(parent.lag_frames / 2) #cut lag frames in half
 			if parent.frame <= parent.landing_frames + parent.lag_frames: #Checking if we are still landing
@@ -296,11 +299,13 @@ func get_transition(delta):
 					return states.JUMP_SQUAT
 			else: 
 				if Input.is_action_pressed("down_%s" % id):
+					parent.l_cancel = 0
 					parent.lag_frames = 0
 					parent.fr()
 					parent.reset_Jumps()
 					return states.CROUCH
 				else:
+					parent.l_cancel = 0
 					parent.fr()
 					parent.lag_frames = 0
 					parent.reset_Jumps()
@@ -933,7 +938,9 @@ func TILT():
 
 func AIREAL():
 	if state_includes([states.AIR, states.DAIR, states.NAIR, states.FAIR, states.BAIR, states.UAIR]):
-		if !(parent.GroundL.is_colliding() and parent.GroundR.is_colliding()):
+		if !(parent.GroundL.is_colliding()) and !(parent.GroundR.is_colliding()):
 			return true
 		else:
 			return false
+	else:
+		return false
