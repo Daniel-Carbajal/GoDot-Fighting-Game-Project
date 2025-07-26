@@ -41,6 +41,7 @@ var catch = false
 
 #Hitboxes
 @export var hitbox: PackedScene
+@export var projectile: PackedScene
 var selfState
 
 #Temp Vars
@@ -49,6 +50,8 @@ var hit_pause_dur = 0
 var temp_pos = Vector2(0,0)
 var temp_vel = Vector2(0,0)
 
+#Attacks
+var projectile_cooldown = 0
 
 #OnReady Variables
 @onready var GroundR = get_node('Raycasts/GroundR')
@@ -58,6 +61,7 @@ var temp_vel = Vector2(0,0)
 @onready var states = $State
 @onready var sprite = get_node("Sprite/AnimationPlayer")
 @onready var percentLabel = get_parent().get_node("P%s" % id)
+@onready var gun_pos = get_node("gun_pos")
 
 #Knights main attributes
 var RUNSPEED = 400
@@ -92,6 +96,27 @@ func create_hitbox(width, height, damage, angle, base_kb, kb_scaling, duration, 
 		var flip_x_points = Vector2(-points.x, points.y)
 		hitbox_instance.set_parameters(width, height, damage, angle, base_kb, kb_scaling, duration, type, flip_x_points, angle_flipper, hitlag)
 	return hitbox_instance
+	
+func create_projectile(dir_x, dir_y, point):
+	#Instance projectile
+	var projectile_instance = projectile.instantiate()
+	projectile_instance.player_list.append(self)
+	get_parent().add_child(projectile_instance)
+	
+	#sets position
+	gun_pos.set_position(point)
+	
+	#flips direction
+	if direction() == 1:
+		print(str(dir_y))
+		projectile_instance.dir(dir_x,dir_y)
+		projectile_instance.set_global_position(gun_pos.get_global_position())
+	else:
+		print(str(dir_y))
+		gun_pos.position.x = -gun_pos.position.x
+		projectile_instance.dir(-(dir_x),dir_y)
+		projectile_instance.set_global_position(gun_pos.get_global_position())
+	return projectile_instance
 
 func updateframes(delta):
 	frame += floor(delta * 60)
@@ -226,3 +251,9 @@ func DAIR():
 	if frame == 17:
 		return true
 		
+#Special Attacks
+func NEUTRAL_SPECIAL():
+	if frame == 4:
+		create_projectile(1,0,Vector2(50,0))
+	if frame == 14:
+		return true

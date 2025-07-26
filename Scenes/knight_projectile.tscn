@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://uc6ce0vjj602"]
+
+[ext_resource type="Script" path="res://Scripts/knight_projectile.gd" id="1_lm5dk"]
+[ext_resource type="Texture2D" uid="uid://c4dltlmamx2ar" path="res://icon.svg" id="2_jkwob"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ab11t"]
+size = Vector2(112, 16)
+
+[node name="knight_projectile" type="Area2D"]
+script = ExtResource("1_lm5dk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ab11t")
+debug_color = Color(0.937255, 0, 0, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1, 0.12)
+texture = ExtResource("2_jkwob")
+
+[connection signal="body_entered" from="." to="." method="_on_knight_projectile_body_entered"]

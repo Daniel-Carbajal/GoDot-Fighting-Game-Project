@@ -33,6 +33,9 @@ func _ready():
 	add_state("FAIR")
 	add_state("DAIR")
 	
+	add_state("SPECIAL_ATTACK") #Not implemented as tree yet
+	add_state("NEUTRAL_SPECIAL") 
+	
 	add_state("HIT_FREEZE")
 	add_state("HITSTUN")
 	call_deferred("set_state", states.STAND)
@@ -66,6 +69,10 @@ func get_transition(delta):
 	if Input.is_action_just_pressed("attack_%s" %id) && TILT() == true:
 		parent.fr()
 		return states.GROUND_ATTACK
+		
+	if Input.is_action_just_pressed("special_%s" % id) && SPECIAL() == true:
+		parent.fr()
+		return states.NEUTRAL_SPECIAL
 		
 	#ATTACK INPUT
 	if Input.is_action_just_pressed("attack_%s" % id) && AIREAL() == true:
@@ -282,6 +289,9 @@ func get_transition(delta):
 					parent.velocity.x = -parent.MAXAIRSPEED
 				elif Input.is_action_pressed("right_%s" % id):
 					parent.velocity.x = parent.MAXAIRSPEED
+			if Input.is_action_just_pressed("special_%s" % id):
+				parent.fr()
+				return states.NEUTRAL_SPECIAL
 			
 		states.LANDING:
 			if parent.frame == 1:
@@ -659,6 +669,40 @@ func get_transition(delta):
 		states.JAB:
 			pass
 			
+		states.NEUTRAL_SPECIAL:
+			if AIREAL() == false:
+				if parent.velocity.x > 0:
+					if parent.velocity.x > parent.DASHSPEED:
+						parent.velocity.x = parent.DASHSPEED
+					parent.velocity.x = parent.velocity.x - parent.TRACTION * 10
+					parent.velocity.x = clampi(parent.velocity.x,0,parent.velocity.x)
+				elif parent.velocity.x < 0:
+					if parent.velocity.x < -parent.DASHSPEED:
+						parent.velocity.x = -parent.DASHSPEED
+					parent.velocity.x = parent.velocity.x + parent.TRACTION * 10
+					parent.velocity.x = clampi(parent.velocity.x,parent.velocity.x,0)
+					
+			if AIREAL() == true:
+				AIRMOVEMENT()
+			if parent.frame <= 1:
+				if parent.projectile_cooldown == 1:
+					parent.projectile_cooldown =- 1
+				if parent.projectile_cooldown == 0:
+					parent.projectile_cooldown += 1
+					parent.fr()
+					parent.NEUTRAL_SPECIAL()
+			if parent.frame < 14:
+				if Input.is_action_just_pressed("special_%s" % id):
+					parent.fr()
+					return states.NEUTRAL_SPECIAL
+			if parent.NEUTRAL_SPECIAL() == true:
+				if AIREAL() == true:
+					return states.AIR
+				if AIREAL() == false:
+					if parent.frame == 14:
+						parent.fr()
+						return states.STAND
+		
 		states.HIT_FREEZE:
 			if parent.freezeframes == 0:
 				parent.fr()
@@ -782,6 +826,8 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.JAB:
 			parent.states.text = str("JAB")
 			#parent.sprite.play("Jab")
+		states.NEUTRAL_SPECIAL:
+			parent.states.text = str("NEUTRAL_SPECIAL")
 		states.HIT_FREEZE:
 			parent.states.text = str("HITFREEZE")
 			parent.sprite.play("Hurt")
@@ -950,8 +996,12 @@ func TILT():
 	if state_includes([states.STAND, states.DASH, states.RUN, states.WALK, states.CROUCH]):
 		return true
 
+func SPECIAL():
+	if state_includes([states.STAND, states.WALK, states.DASH, states.RUN, states.CROUCH]):
+		return true
+
 func AIREAL():
-	if state_includes([states.AIR, states.DAIR, states.NAIR, states.FAIR, states.BAIR, states.UAIR]):
+	if state_includes([states.AIR, states.DAIR, states.NAIR, states.FAIR, states.BAIR, states.UAIR, states.NEUTRAL_SPECIAL]):
 		if !(parent.GroundL.is_colliding()) and !(parent.GroundR.is_colliding()):
 			return true
 		else:
