@@ -1,4 +1,4 @@
-[gd_scene load_steps=100 format=3 uid="uid://b1oyr85vu7svg"]
+[gd_scene load_steps=101 format=3 uid="uid://b1oyr85vu7svg"]
 
 [ext_resource type="Texture2D" uid="uid://cpscedp7xj6u1" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png" id="1_4j1js"]
 [ext_resource type="Script" path="res://Scripts/KNIGHT.gd" id="1_k2c4n"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://uc6ce0vjj602" path="res://Scenes/knight_projectile.tscn" id="3_lkoxv"]
 [ext_resource type="Texture2D" uid="uid://cg4jperjywndn" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/DEFEND.png" id="4_e1fb4"]
 [ext_resource type="Texture2D" uid="uid://be5lsj2h7ao7r" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/JUMP.png" id="4_krkax"]
+[ext_resource type="PackedScene" uid="uid://d1mgnbe4mffj2" path="res://Scenes/grabbox.tscn" id="4_l8uxg"]
 [ext_resource type="Texture2D" uid="uid://dnbmm80x205sb" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/DEATH.png" id="4_y8cnc"]
 [ext_resource type="Texture2D" uid="uid://bb2c3ycynjven" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/HURT.png" id="6_3cadj"]
 [ext_resource type="Texture2D" uid="uid://dpqtv8cm4b88t" path="res://Assets/Character Sprites/free-knight-2d-pixel-art/Knight 2D Pixel Art/Sprites/with_outline/RUN.png" id="6_fpc7x"]
@@ -897,6 +898,7 @@ collision_mask = 14
 script = ExtResource("1_k2c4n")
 hitbox = ExtResource("2_a0lxu")
 projectile = ExtResource("3_lkoxv")
+grabbox = ExtResource("4_l8uxg")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("2_lu0at")

@@ -1,8 +1,9 @@
-res://Scripts/knight_projectile.gd
 res://Scenes/Stages/test_stage.tscn
 res://Scripts/KNIGHT.gd
 res://Scenes/Characters/knight.tscn
 res://Scenes/Stages/stage_assets/ledge.tscn
 res://Scenes/hitbox.tscn
-res://Scripts/StateMachineKnight.gd
 res://Scenes/knight_projectile.tscn
+res://Scripts/Grabbox.gd
+res://Scripts/StateMachineKnight.gd
+res://Scenes/grabbox.tscn

@@ -24,7 +24,9 @@ func _ready():
 	add_state("DOWN_TILT")
 	add_state("FORWARD_TILT")
 	add_state("UP_TILT")
+	
 	add_state("JAB")
+	add_state("JAB_1")
 	
 	add_state("AIR_ATTACK")
 	add_state("NAIR")
@@ -36,6 +38,7 @@ func _ready():
 	add_state("SPECIAL_ATTACK") #Not implemented as tree yet
 	add_state("NEUTRAL_SPECIAL") 
 	
+	add_state("GRABBED")
 	add_state("HIT_FREEZE")
 	add_state("HITSTUN")
 	call_deferred("set_state", states.STAND)
@@ -667,7 +670,49 @@ func get_transition(delta):
 					return states.STAND
 					
 		states.JAB:
-			pass
+			if parent.frame <= 1:
+				if parent.velocity.x > 0:
+					if parent.velocity.x > parent.DASHSPEED:
+						parent.velocity.x = parent.DASHSPEED
+					parent.velocity.x = parent.velocity.x - parent.TRACTION*20
+					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				elif parent.velocity.x < 0:
+					if parent.velocity.x < -parent.DASHSPEED:
+						parent.velocity.x = -parent.DASHSPEED
+					parent.velocity.x = parent.velocity.x + parent.TRACTION*20
+					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+				parent.JAB()
+			if parent.JAB() == true:
+				if Input.is_action_pressed("down_%s" % id):
+					parent.fr()
+					return states.CROUCH
+				else:
+					parent.fr()
+					return states.STAND
+			if parent.JAB() == false:
+				parent.fr()
+				return states.JAB_1
+				
+		states.JAB_1:
+			if parent.frame <= 1:
+				if parent.velocity.x > 0:
+					if parent.velocity.x > parent.DASHSPEED:
+						parent.velocity.x = parent.DASHSPEED
+					parent.velocity.x = parent.velocity.x - parent.TRACTION*20
+					parent.velocity.x = clamp(parent.velocity.x,0,parent.velocity.x)
+				elif parent.velocity.x < 0:
+					if parent.velocity.x < -parent.DASHSPEED:
+						parent.velocity.x = -parent.DASHSPEED
+					parent.velocity.x = parent.velocity.x + parent.TRACTION*20
+					parent.velocity.x = clamp(parent.velocity.x,parent.velocity.x,0)
+				parent.JAB_1()
+			if parent.JAB_1() == true:
+				if Input.is_action_pressed("down_%s" % id):
+					parent.fr()
+					return states.CROUCH
+				else:
+					parent.fr()
+					return states.STAND
 			
 		states.NEUTRAL_SPECIAL:
 			if AIREAL() == false:
@@ -744,6 +789,12 @@ func get_transition(delta):
 					return states.AIR
 			elif parent.frame > 60*5:
 				return states.AIR
+				
+		states.GRABBED:
+			for body in get_tree().get_nodes_in_group("Character"):
+				if body.name == temp_body:
+					if body.get_node("StateMachine").state != temp_state:
+						return states.STAND
 
 func enter_state(new_state, old_state): #Once you have entered a state, play the aproporiate animation
 	match new_state:
@@ -779,7 +830,7 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.LANDING:
 			#parent.play_animation("Crouch")
 			parent.states.text = str("LANDING")
-			
+		#################################################
 		states.LEDGE_CATCH:
 			#parent.sprite.play("LEDGE_CATCH")
 			parent.states.text = str("LEDGE_CATCH")
@@ -795,7 +846,7 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.LEDGE_ROLL:
 			#parent.sprite.play("LEDGE_ROLL")
 			parent.states.text = str("LEDGE_ROLL")
-			
+		##################################################
 		states.AIR_ATTACK:
 			parent.states.text = str("AIR_ATTACK")
 		states.NAIR:
@@ -811,7 +862,7 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 			parent.sprite.play("Attack_One")
 		states.BAIR:
 			parent.states.text = str("BAIR")
-			
+		#################################################	
 		states.GROUND_ATTACK:
 			parent.states.text = str("GROUND_ATTACK")
 		states.FORWARD_TILT:
@@ -823,16 +874,25 @@ func enter_state(new_state, old_state): #Once you have entered a state, play the
 		states.UP_TILT:
 			parent.states.text = str("UP_TILT")
 			parent.sprite.play("Attack_Three")
+		################################################	
 		states.JAB:
 			parent.states.text = str("JAB")
 			#parent.sprite.play("Jab")
+		states.JAB_1:
+			parent.states.text = str("JAB_1")
+			#parent.sprite.play("Jab_1")
+		################################################	
 		states.NEUTRAL_SPECIAL:
 			parent.states.text = str("NEUTRAL_SPECIAL")
+		#################################################	
 		states.HIT_FREEZE:
 			parent.states.text = str("HITFREEZE")
 			parent.sprite.play("Hurt")
 		states.HITSTUN:
 			parent.states.text = str("HITSTUN")
+			parent.sprite.play("Hurt")
+		states.GRABBED:
+			parent.states.text = str("GRABBED")
 			parent.sprite.play("Hurt")
 			
 func exit_state(old_state, new_state):
@@ -1009,6 +1069,12 @@ func AIREAL():
 	else:
 		return false
 
+var temp_body
+var temp_state
+func grabbed(body, state):
+	temp_body = body
+	temp_state = state
+	
 var kbx
 var kby
 var hd

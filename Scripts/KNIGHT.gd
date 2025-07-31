@@ -42,6 +42,7 @@ var catch = false
 #Hitboxes
 @export var hitbox: PackedScene
 @export var projectile: PackedScene
+@export var grabbox: PackedScene
 var selfState
 
 #Temp Vars
@@ -52,6 +53,7 @@ var temp_vel = Vector2(0,0)
 
 #Attacks
 var projectile_cooldown = 0
+var grabbing = false
 
 #OnReady Variables
 @onready var GroundR = get_node('Raycasts/GroundR')
@@ -108,15 +110,27 @@ func create_projectile(dir_x, dir_y, point):
 	
 	#flips direction
 	if direction() == 1:
-		print(str(dir_y))
+		#print(str(dir_y))
 		projectile_instance.dir(dir_x,dir_y)
 		projectile_instance.set_global_position(gun_pos.get_global_position())
 	else:
-		print(str(dir_y))
+		#print(str(dir_y))
 		gun_pos.position.x = -gun_pos.position.x
 		projectile_instance.dir(-(dir_x),dir_y)
 		projectile_instance.set_global_position(gun_pos.get_global_position())
 	return projectile_instance
+
+func create_grabbox(width, height, damage, duration, points):
+	var grabbox_instance = grabbox.instantiate()
+	self.add_child(grabbox_instance)
+	
+	#rotates points
+	if direction() == 1:
+		grabbox_instance.set_parameters(width, height, damage, duration, points)
+	else:
+		var flip_x_points = Vector2(-points.x, points.y)
+		grabbox_instance.set_parameters(width, height, damage, duration, flip_x_points)
+	return grabbox_instance
 
 func updateframes(delta):
 	frame += floor(delta * 60)
@@ -178,6 +192,24 @@ func hit_p(delta):
 #Order of create_hitbox parameters in terms of attack attributes:
 #	width of hitbox, height of hitbox, damage, angle of knockback, base knockback, knockback scaling, duration, 
 #	type of attack, hitbox spawnpoint, angle_flipper val, hitlag val   
+func JAB():
+	if frame == 2:
+		create_grabbox(30,40,0,3,Vector2(32,0))
+	if frame == 5:
+		if grabbing == true:
+			return false
+	if frame >= 20:
+		return true
+	
+func JAB_1():
+	if frame == 1:
+		grabbing = false
+		create_grabbox(30,40,0,13,Vector2(32,0))
+	if frame == 12:
+		create_hitbox(40,20,8,90,2000,0,9,'normal',Vector2(48,8),0,0)
+	if frame == 32:
+		return true
+	
 func down_swing_1():
 	if frame == 4:
 		create_hitbox(35,10,25,90,2000,5,3,'normal',Vector2(7,18.5),0,1)
@@ -257,3 +289,5 @@ func NEUTRAL_SPECIAL():
 		create_projectile(1,0,Vector2(50,0))
 	if frame == 14:
 		return true
+		
+
